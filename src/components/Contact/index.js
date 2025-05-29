@@ -36,10 +36,10 @@ export default function Contact() {
 
     // EmailJS 配置 - 需要你提供邮箱地址后设置
     const EMAILJS_CONFIG = {
-        SERVICE_ID: 'your_service_id',  // 需要在 EmailJS 中设置
-        TEMPLATE_ID_PUBLISH: 'template_publish',  // 房源发布模板
-        TEMPLATE_ID_CONTACT: 'template_contact',  // 联系需求模板
-        PUBLIC_KEY: 'your_public_key'  // EmailJS 公钥
+        SERVICE_ID: 'service_b9sc71r',  // 需要在 EmailJS 中设置
+        TEMPLATE_ID_PUBLISH: 'template_tcyhlug',  // 房源发布模板
+        TEMPLATE_ID_CONTACT: 'template_crgo7cu',  // 联系需求模板
+        PUBLIC_KEY: 'bMngx4pjmTwop4Ivs'  // EmailJS 公钥
     };
 
     const handlePublishChange = (e) => {
