@@ -1,4 +1,3 @@
-// components/Services.js
 export default function Services() {
     const services = [
         {
@@ -30,7 +29,7 @@ export default function Services() {
             title: '家居帮手',
             items: [
                 {
-                    icon: '🛋️',
+                    icon: '🚚',
                     title: '家具租赁',
                     description: '短期家具租赁服务，拎包入住无需购买大件家具',
                     buttonText: '浏览家具'
@@ -54,13 +53,13 @@ export default function Services() {
             title: '寄存/转运服务',
             items: [
                 {
-                    icon: '📦',
+                    icon: '🧳',
                     title: '行李寄存',
                     description: '安全可靠的行李寄存服务，短期长期存储皆可',
                     buttonText: '查看价格'
                 },
                 {
-                    icon: '🚚',
+                    icon: '📦',
                     title: '包裹转运',
                     description: '国际包裹转运服务，连接中美两地的桥梁',
                     buttonText: '计算费用'
@@ -72,95 +71,114 @@ export default function Services() {
     return (
         <>
             {services.map((service) => (
-                <section key={service.id} id={service.id} className="additional-services">
+                <section key={service.id} id={service.id} className="info-section">
                     <h2 className="section-title">{service.title}</h2>
-                    <div className="services-grid">
+                    <div className="services-info">
                         {service.items.map((item, index) => (
-                            <div key={index} className="service-card">
+                            <div key={index} className="service-info-item">
                                 <div className="service-icon">{item.icon}</div>
-                                <h3>{item.title}</h3>
-                                <p>{item.description}</p>
-                                <button className="service-btn">{item.buttonText}</button>
+                                <div className="service-content">
+                                    <h3>{item.title}</h3>
+                                    <p>{item.description}</p>
+                                    <button className="service-btn">{item.buttonText}</button>
+                                </div>
                             </div>
                         ))}
                     </div>
-
-                    <style jsx>{`
-            .additional-services {
-              background: rgba(255, 255, 255, 0.1);
-              backdrop-filter: blur(20px);
-              padding: 80px 20px;
-              margin: 60px 0;
-            }
-
-            .section-title {
-              text-align: center;
-              font-size: 36px;
-              font-weight: 700;
-              color: white;
-              margin-bottom: 60px;
-            }
-
-            .services-grid {
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-              gap: 40px;
-              max-width: 1200px;
-              margin: 0 auto;
-            }
-
-            .service-card {
-              background: rgba(255, 255, 255, 0.95);
-              border-radius: 20px;
-              padding: 40px 30px;
-              text-align: center;
-              transition: all 0.3s ease;
-              position: relative;
-              overflow: hidden;
-            }
-
-            .service-card:hover {
-              transform: translateY(-10px);
-              box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-            }
-
-            .service-icon {
-              font-size: 48px;
-              margin-bottom: 20px;
-              display: block;
-            }
-
-            .service-card h3 {
-              font-size: 24px;
-              font-weight: 700;
-              margin-bottom: 15px;
-              color: #333;
-            }
-
-            .service-card p {
-              color: #666;
-              line-height: 1.6;
-              margin-bottom: 25px;
-            }
-
-            .service-btn {
-              padding: 12px 25px;
-              border: none;
-              border-radius: 8px;
-              background: linear-gradient(45deg, #667eea, #764ba2);
-              color: white;
-              font-weight: 600;
-              cursor: pointer;
-              transition: all 0.3s ease;
-            }
-
-            .service-btn:hover {
-              transform: translateY(-2px);
-              box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-            }
-          `}</style>
                 </section>
             ))}
+
+            <style jsx>{`
+        .info-section {
+          padding: 60px 20px;
+          margin: 0;
+          background: transparent;
+        }
+
+        .section-title {
+          text-align: center;
+          font-size: 36px;
+          font-weight: 700;
+          color: #333;
+          margin-bottom: 40px;
+        }
+
+        .services-info {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 30px;
+        }
+
+        .service-info-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 20px;
+          padding: 30px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 15px;
+          backdrop-filter: blur(10px);
+          transition: all 0.3s ease;
+        }
+
+        .service-info-item:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .service-icon {
+          font-size: 48px;
+          margin-bottom: 0;
+          flex-shrink: 0;
+        }
+
+        .service-content {
+          flex: 1;
+        }
+
+        .service-content h3 {
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 10px;
+          color: #333;
+        }
+
+        .service-content p {
+          color: #666;
+          line-height: 1.6;
+          margin-bottom: 20px;
+          font-size: 16px;
+        }
+
+        .service-btn {
+          padding: 12px 25px;
+          border: none;
+          border-radius: 8px;
+          background: linear-gradient(45deg, #667eea, #764ba2);
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .service-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 768px) {
+          .service-info-item {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+          }
+
+          .service-icon {
+            align-self: center;
+          }
+        }
+      `}</style>
         </>
     );
 }
