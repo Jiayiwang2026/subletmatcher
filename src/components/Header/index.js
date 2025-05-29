@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import emailjs from '@emailjs/browser';
 
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalFeatureName, setModalFeatureName] = useState('');
+    const [emailStatus, setEmailStatus] = useState(''); // 'sending', 'success', 'error'
     const router = useRouter();
+
+    // 初始化EmailJS (请替换为您的实际配置)
+    useEffect(() => {
+        emailjs.init("bMngx4pjmTwop4Ivs"); // 替换为您的EmailJS Public Key
+    }, []);
 
     // 滚动到指定区域的函数
     const scrollToSection = (sectionId) => {
@@ -15,42 +22,55 @@ export default function Header() {
         }
     };
 
-    // 使用mailto发送邮件
-    const sendEmailWithMailto = (featureName) => {
-        const subject = encodeURIComponent(`咨询功能：${featureName}`);
-        const body = encodeURIComponent(
-            `您好，\n\n我对 ${featureName} 功能很感兴趣，希望了解更多信息。\n\n功能名称：${featureName}\n咨询时间：${new Date().toLocaleString('zh-CN')}\n\n期待您的回复！`
-        );
-        const mailtoUrl = `mailto:subletmatcher@gmail.com?subject=${subject}&body=${body}`;
+    // 发送邮件功能
+    const sendEmail = async (featureName) => {
+        const templateParams = {
+            feature_name: featureName,
+            user_message: `用户对 ${featureName} 功能感兴趣，希望了解更多信息。`,
+            to_email: 'subletmatcher@gmail.com',
+            from_name: '网站访客',
+            timestamp: new Date().toLocaleString('zh-CN')
+        };
 
-        // 打开用户的默认邮件客户端
-        window.location.href = mailtoUrl;
-
-        return true; // mailto总是"成功"的，因为它只是打开邮件客户端
+        try {
+            await emailjs.send(
+                'service_b9sc71r',    // 替换为您的EmailJS Service ID
+                'template_crgo7cu',   // 替换为您的EmailJS Template ID
+                templateParams
+            );
+            return true;
+        } catch (error) {
+            console.error('邮件发送失败:', error);
+            return false;
+        }
     };
 
-    // 打开弹窗并准备发送邮件
-    const openModalAndPrepareEmail = (featureName) => {
+    // 打开弹窗并自动发送邮件
+    const openModalAndSendEmail = async (featureName) => {
         setModalFeatureName(featureName);
         setIsModalOpen(true);
+        setEmailStatus('sending');
 
         // 防止背景滚动
         document.body.style.overflow = 'hidden';
+
+        // 自动发送邮件
+        const success = await sendEmail(featureName);
+
+        if (success) {
+            setEmailStatus('success');
+        } else {
+            setEmailStatus('error');
+        }
     };
 
     // 关闭弹窗
     const closeModal = () => {
         setIsModalOpen(false);
         setModalFeatureName('');
+        setEmailStatus('');
         // 恢复背景滚动
         document.body.style.overflow = 'auto';
-    };
-
-    // 处理邮件发送按钮点击
-    const handleSendEmail = () => {
-        sendEmailWithMailto(modalFeatureName);
-        // 可以选择是否在发送后关闭弹窗
-        // closeModal();
     };
 
     // 处理导航点击事件
@@ -62,7 +82,7 @@ export default function Header() {
 
         // 检查是否是开发中的功能
         if (id === 'home-services' || id === 'storage-shipping') {
-            openModalAndPrepareEmail(name);
+            openModalAndSendEmail(name);
             setIsMobileMenuOpen(false);
             return;
         }
@@ -102,34 +122,65 @@ export default function Header() {
         };
     }, [isModalOpen]);
 
-    // 渲染弹窗内容
+    // 根据邮件状态渲染不同内容
     const renderModalContent = () => {
-        return (
-            <>
-                <div className="modal-icon">
-                    📧
-                </div>
-                <div className="modal-title">功能开发中</div>
-                <div className="modal-subtitle">感谢您使用 SubletMatcher</div>
-                <div className="modal-content">
-                    <strong>{modalFeatureName}</strong> 功能还在开发中，我们很期待为您提供这项服务！
-                    <br /><br />
-                    点击下方按钮将打开您的邮件客户端，我们已经为您准备好了咨询邮件模板。
-                </div>
-                <div className="contact-info">
-                    <div className="contact-label">我们的邮箱：</div>
-                    <div className="contact-email">subletmatcher@gmail.com</div>
-                </div>
-                <div className="modal-buttons">
-                    <button className="btn btn-primary" onClick={handleSendEmail}>
-                        发送咨询邮件
-                    </button>
-                    <button className="btn btn-secondary" onClick={closeModal}>
-                        稍后联系
-                    </button>
-                </div>
-            </>
-        );
+        if (emailStatus === 'sending') {
+            return (
+                <>
+                    <div className="modal-icon">
+                        <div className="spinner"></div>
+                    </div>
+                    <div className="modal-title">正在发送通知...</div>
+                    <div className="modal-content">
+                        我们正在自动发送您的咨询到团队邮箱，请稍候。
+                    </div>
+                    <div className="contact-info">
+                        <div className="contact-label">我们的邮箱：</div>
+                        <div className="contact-email">subletmatcher@gmail.com</div>
+                    </div>
+                </>
+            );
+        }
+
+        if (emailStatus === 'success') {
+            return (
+                <>
+                    <div className="modal-icon success">
+                        ✓
+                    </div>
+                    <div className="modal-title">通知已发送！</div>
+                    <div className="modal-subtitle">感谢您使用 SubletMatcher</div>
+                    <div className="modal-content">
+                        我们已收到您对 <strong>{modalFeatureName}</strong> 的咨询。该功能还在开发中，团队会尽快与您联系，敬请期待！
+                    </div>
+                    <div className="contact-info">
+                        <div className="contact-label">我们的邮箱：</div>
+                        <div className="contact-email">subletmatcher@gmail.com</div>
+                    </div>
+                </>
+            );
+        }
+
+        if (emailStatus === 'error') {
+            return (
+                <>
+                    <div className="modal-icon error">
+                        ⚠️
+                    </div>
+                    <div className="modal-title">发送遇到问题</div>
+                    <div className="modal-subtitle">感谢您使用 SubletMatcher</div>
+                    <div className="modal-content">
+                        <strong>{modalFeatureName}</strong> 功能还在开发中，尽情期待。自动通知发送失败，您也可以直接联系我们的邮箱：
+                    </div>
+                    <div className="contact-info">
+                        <div className="contact-label">详细请联系：</div>
+                        <div className="contact-email">subletmatcher@gmail.com</div>
+                    </div>
+                </>
+            );
+        }
+
+        return null;
     };
 
     return (
@@ -445,6 +496,29 @@ export default function Header() {
                     color: white;
                 }
 
+                .modal-icon.success {
+                    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+                }
+
+                .modal-icon.error {
+                    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+                }
+
+                /* 加载动画 */
+                .spinner {
+                    width: 40px;
+                    height: 40px;
+                    border: 4px solid rgba(255, 255, 255, 0.3);
+                    border-top: 4px solid white;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+
                 .modal-title {
                     font-size: 24px;
                     color: #333;
@@ -463,7 +537,7 @@ export default function Header() {
                     font-size: 16px;
                     color: #666;
                     line-height: 1.6;
-                    margin-bottom: 25px;
+                    margin-bottom: 30px;
                     text-align: left;
                 }
 
