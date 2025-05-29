@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import emailjs from '@emailjs/browser';
 
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalFeatureName, setModalFeatureName] = useState('');
+    const [emailStatus, setEmailStatus] = useState(''); // 'sending', 'success', 'error'
     const router = useRouter();
+
+    // 初始化EmailJS (请替换为您的实际配置)
+    useEffect(() => {
+        emailjs.init("YOUR_PUBLIC_KEY"); // 替换为您的EmailJS Public Key
+    }, []);
 
     // 滚动到指定区域的函数
     const scrollToSection = (sectionId) => {
@@ -15,18 +22,53 @@ export default function Header() {
         }
     };
 
-    // 打开弹窗
-    const openModal = (featureName) => {
+    // 发送邮件功能
+    const sendEmail = async (featureName) => {
+        const templateParams = {
+            feature_name: featureName,
+            user_message: `用户对 ${featureName} 功能感兴趣，希望了解更多信息。`,
+            to_email: 'subletmatcher@gmail.com',
+            from_name: '网站访客',
+            timestamp: new Date().toLocaleString('zh-CN')
+        };
+
+        try {
+            await emailjs.send(
+                'YOUR_SERVICE_ID',    // 替换为您的EmailJS Service ID
+                'YOUR_TEMPLATE_ID',   // 替换为您的EmailJS Template ID
+                templateParams
+            );
+            return true;
+        } catch (error) {
+            console.error('邮件发送失败:', error);
+            return false;
+        }
+    };
+
+    // 打开弹窗并自动发送邮件
+    const openModalAndSendEmail = async (featureName) => {
         setModalFeatureName(featureName);
         setIsModalOpen(true);
+        setEmailStatus('sending');
+
         // 防止背景滚动
         document.body.style.overflow = 'hidden';
+
+        // 自动发送邮件
+        const success = await sendEmail(featureName);
+
+        if (success) {
+            setEmailStatus('success');
+        } else {
+            setEmailStatus('error');
+        }
     };
 
     // 关闭弹窗
     const closeModal = () => {
         setIsModalOpen(false);
         setModalFeatureName('');
+        setEmailStatus('');
         // 恢复背景滚动
         document.body.style.overflow = 'auto';
     };
@@ -40,7 +82,7 @@ export default function Header() {
 
         // 检查是否是开发中的功能
         if (id === 'home-services' || id === 'storage-shipping') {
-            openModal(name);
+            openModalAndSendEmail(name);
             setIsMobileMenuOpen(false);
             return;
         }
@@ -79,6 +121,77 @@ export default function Header() {
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [isModalOpen]);
+
+    // 根据邮件状态渲染不同内容
+    const renderModalContent = () => {
+        if (emailStatus === 'sending') {
+            return (
+                <>
+                    <div className="modal-icon">
+                        <div className="spinner"></div>
+                    </div>
+                    <div className="modal-title">正在发送通知...</div>
+                    <div className="modal-content">
+                        我们正在自动发送您的咨询到团队邮箱，请稍候。
+                    </div>
+                    <div className="contact-info">
+                        <div className="contact-label">我们的邮箱：</div>
+                        <div className="contact-email">subletmatcher@gmail.com</div>
+                    </div>
+                </>
+            );
+        }
+
+        if (emailStatus === 'success') {
+            return (
+                <>
+                    <div className="modal-icon success">
+                        ✓
+                    </div>
+                    <div className="modal-title">通知已发送！</div>
+                    <div className="modal-subtitle">感谢您使用 SubletMatcher</div>
+                    <div className="modal-content">
+                        我们已收到您对 <strong>{modalFeatureName}</strong> 的咨询。该功能还在开发中，团队会尽快与您联系，敬请期待！
+                    </div>
+                    <div className="contact-info">
+                        <div className="contact-label">我们的邮箱：</div>
+                        <div className="contact-email">subletmatcher@gmail.com</div>
+                    </div>
+                    <div className="modal-buttons">
+                        <button className="btn btn-primary" onClick={closeModal}>
+                            知道了
+                        </button>
+                    </div>
+                </>
+            );
+        }
+
+        if (emailStatus === 'error') {
+            return (
+                <>
+                    <div className="modal-icon error">
+                        ⚠️
+                    </div>
+                    <div className="modal-title">发送遇到问题</div>
+                    <div className="modal-subtitle">感谢您使用 SubletMatcher</div>
+                    <div className="modal-content">
+                        <strong>{modalFeatureName}</strong> 功能还在开发中，尽情期待。自动通知发送失败，您也可以直接联系我们的邮箱：
+                    </div>
+                    <div className="contact-info">
+                        <div className="contact-label">详细请联系：</div>
+                        <div className="contact-email">subletmatcher@gmail.com</div>
+                    </div>
+                    <div className="modal-buttons">
+                        <button className="btn btn-secondary" onClick={closeModal}>
+                            知道了
+                        </button>
+                    </div>
+                </>
+            );
+        }
+
+        return null;
+    };
 
     return (
         <>
@@ -143,34 +256,7 @@ export default function Header() {
                         <button className="close-btn" onClick={closeModal}>
                             &times;
                         </button>
-
-                        <div className="modal-icon">
-                            🚀
-                        </div>
-
-                        <div className="modal-title">感谢您使用 SubletMatcher</div>
-                        <div className="modal-subtitle">{modalFeatureName}功能还在开发中</div>
-
-                        <div className="modal-content">
-                            我们正在努力开发这个功能，为您提供更好的服务体验。敬请期待我们即将推出的新功能！
-                        </div>
-
-                        <div className="contact-info">
-                            <div className="contact-label">如有疑问，请联系我们：</div>
-                            <div className="contact-email">subletmatcher@gmail.com</div>
-                        </div>
-
-                        <div className="modal-buttons">
-                            <button
-                                className="btn btn-primary"
-                                onClick={() => window.open('mailto:subletmatcher@gmail.com')}
-                            >
-                                联系我们
-                            </button>
-                            <button className="btn btn-secondary" onClick={closeModal}>
-                                知道了
-                            </button>
-                        </div>
+                        {renderModalContent()}
                     </div>
                 </div>
             )}
@@ -418,6 +504,29 @@ export default function Header() {
                     justify-content: center;
                     font-size: 40px;
                     color: white;
+                }
+
+                .modal-icon.success {
+                    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+                }
+
+                .modal-icon.error {
+                    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+                }
+
+                /* 加载动画 */
+                .spinner {
+                    width: 40px;
+                    height: 40px;
+                    border: 4px solid rgba(255, 255, 255, 0.3);
+                    border-top: 4px solid white;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
                 }
 
                 .modal-title {
