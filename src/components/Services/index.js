@@ -42,6 +42,28 @@ export default function Services() {
         }
     ];
 
+    // 滚动到指定区域的函数（与Header组件中相同的实现）
+    const scrollToSection = (sectionId) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    const handleServiceClick = (serviceName) => {
+        // 滚动到联系我们区域
+        scrollToSection('contact');
+
+        // 可选：在滚动后设置一些状态或存储用户选择的服务
+        // 比如存储到localStorage或状态管理中
+        localStorage.setItem('selectedService', serviceName);
+    };
+
+    const handleMainCTAClick = () => {
+        // 主按钮点击，滚动到联系我们区域
+        scrollToSection('contact');
+    };
+
     return (
         <div className="services-container">
             {/* 主标题部分 */}
@@ -71,7 +93,12 @@ export default function Services() {
                 <div className="action-content">
                     <h2>准备开始您的便捷生活？</h2>
                     <p>我们的专业团队随时为您提供个性化的服务方案</p>
-                    <button className="main-cta-button">立即咨询所有服务</button>
+                    <button
+                        className="main-cta-button"
+                        onClick={handleMainCTAClick}
+                    >
+                        立即咨询所有服务
+                    </button>
                 </div>
             </div>
 
@@ -130,6 +157,8 @@ export default function Services() {
                     border: 1px solid rgba(255, 255, 255, 0.2);
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                     cursor: pointer;
+                    display: flex;
+                    flex-direction: column;
                 }
 
                 .service-card:hover {
@@ -160,7 +189,7 @@ export default function Services() {
                     font-size: 14px;
                     line-height: 1.5;
                     color: #2d3748;
-                    margin-bottom: 0;
+                    margin-bottom: 16px;
                     font-weight: 500;
                     min-height: 60px;
                     display: flex;
@@ -168,7 +197,23 @@ export default function Services() {
                     justify-content: center;
                 }
 
-                /* 移除了 .service-button 相关样式 */
+                .service-button {
+                    padding: 6px 16px;
+                    font-size: 13px;
+                    font-weight: 600;
+                    border: 2px solid transparent;
+                    border-radius: 5px;
+                    background: linear-gradient(45deg, #667eea, #764ba2);
+                    color: white;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    margin-top: auto;
+                }
+
+                .service-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+                }
 
                 .bottom-action {
                     text-align: center;
