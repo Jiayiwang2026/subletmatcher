@@ -75,8 +75,8 @@ export default function Header() {
 
     // 处理导航点击事件
     const handleNavClick = (id, name) => {
-        if (id === 'datahub') {
-            router.push('/datahub');
+        if (id === 'data') {
+            router.push('/data');
             return;
         }
 
@@ -92,7 +92,7 @@ export default function Header() {
     };
 
     const navItems = [
-        { name: '转租房源', id: 'datahub' },
+        { name: '转租房源', id: 'data' },
         { name: '家居帮手', id: 'home-services' },
         { name: '寄存/转运', id: 'storage-shipping' },
         { name: 'News', id: 'news' },
