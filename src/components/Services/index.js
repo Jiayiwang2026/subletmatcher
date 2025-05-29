@@ -94,7 +94,7 @@ export default function Services() {
                     {serviceIndex === services.length - 1 && (
                         <div className="quote-section">
                             <blockquote className="service-quote">
-                                "我们的使命不仅仅是提供服务，而是要成为您在异国他乡最可靠的伙伴，让每一位客户都能感受到家的温暖。"
+                                我们的使命不仅仅是提供服务，而是要成为您在异国他乡最可靠的伙伴，让每一位客户都能感受到家的温暖。
                             </blockquote>
                             <p className="quote-detail">
                                 我们深知留学生活的不易，因此在每一个细节上都精益求精。无论是深夜的紧急维修，还是节假日的贴心关怀，我们都会第一时间响应您的需求。选择我们，就是选择了一个可以依靠的家。
@@ -216,7 +216,7 @@ export default function Services() {
                 }
 
                 .service-quote::before {
-                    content: '"';
+                    content: '\201C';
                     font-size: 80px;
                     color: #667eea;
                     position: absolute;
