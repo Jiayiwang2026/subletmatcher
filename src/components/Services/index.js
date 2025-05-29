@@ -64,17 +64,15 @@ export default function Services() {
     ];
 
     return (
-        <>
+        <div>
             {services.map((service, serviceIndex) => (
                 <section key={service.id} className="info-section">
-                    {/* 标题和介绍 */}
                     <div className="section-header">
                         <h2 className="section-title">{service.title}</h2>
                         <div className="title-underline"></div>
                         <p className="section-description">{service.description}</p>
                     </div>
 
-                    {/* 服务项目网格 */}
                     <div className="services-grid">
                         {service.items.map((item, index) => (
                             <div key={index} className="service-item">
@@ -85,17 +83,15 @@ export default function Services() {
                         ))}
                     </div>
 
-                    {/* 行动按钮 */}
                     <div className="section-action">
                         <button className="cta-button">了解更多服务详情</button>
                     </div>
 
-                    {/* 引用文字（仅在最后一个部分显示） */}
                     {serviceIndex === services.length - 1 && (
                         <div className="quote-section">
-                            <blockquote className="service-quote">
+                            <div className="service-quote">
                                 我们的使命不仅仅是提供服务，而是要成为您在异国他乡最可靠的伙伴，让每一位客户都能感受到家的温暖。
-                            </blockquote>
+                            </div>
                             <p className="quote-detail">
                                 我们深知留学生活的不易，因此在每一个细节上都精益求精。无论是深夜的紧急维修，还是节假日的贴心关怀，我们都会第一时间响应您的需求。选择我们，就是选择了一个可以依靠的家。
                             </p>
@@ -215,16 +211,6 @@ export default function Services() {
                     position: relative;
                 }
 
-                .service-quote::before {
-                    content: '\201C';
-                    font-size: 80px;
-                    color: #667eea;
-                    position: absolute;
-                    left: -20px;
-                    top: -20px;
-                    font-family: serif;
-                }
-
                 .quote-detail {
                     font-size: 16px;
                     line-height: 1.7;
@@ -265,6 +251,6 @@ export default function Services() {
                     }
                 }
             `}</style>
-        </>
+        </div>
     );
 }
