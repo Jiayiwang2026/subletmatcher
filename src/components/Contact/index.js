@@ -106,7 +106,7 @@ export default function Contact() {
 
     const sendContactEmail = async (formData) => {
         const templateParams = {
-            to_email: 'YOUR_EMAIL@example.com',  // 替换为你的邮箱
+            to_email: 'subletmatcher@gamil.com',  // 替换为你的邮箱
             from_name: formData.name,
             subject: '新用户找房需求 - ' + formData.name,
 
