@@ -1,18 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-// 然后在组件内部
-
-
-const handleNavClick = (id) => {
-    if (id === 'datahub') {
-        router.push('/datahub');
-        return;
-    }
-
-    scrollToSection(id);
-    setIsMobileMenuOpen(false);
-};
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const router = useRouter();
@@ -25,6 +13,17 @@ export default function Header() {
         }
     };
 
+    // 处理导航点击事件
+    const handleNavClick = (id) => {
+        if (id === 'datahub') {
+            router.push('/datahub');
+            return;
+        }
+
+        scrollToSection(id);
+        setIsMobileMenuOpen(false);
+    };
+
     const navItems = [
         { name: '转租房源', id: 'datahub' },
         { name: '家居帮手', id: 'home-services' },
@@ -33,7 +32,7 @@ export default function Header() {
         { name: '发布房源', id: 'publish-listing' },
         { name: '联系我们', id: 'contact' },
         { name: '打赏', id: 'donation' }
-    };
+    ];
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
