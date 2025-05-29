@@ -3,6 +3,8 @@ import { useRouter } from 'next/navigation';
 
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalFeatureName, setModalFeatureName] = useState('');
     const router = useRouter();
 
     // 滚动到指定区域的函数
@@ -13,10 +15,33 @@ export default function Header() {
         }
     };
 
+    // 打开弹窗
+    const openModal = (featureName) => {
+        setModalFeatureName(featureName);
+        setIsModalOpen(true);
+        // 防止背景滚动
+        document.body.style.overflow = 'hidden';
+    };
+
+    // 关闭弹窗
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalFeatureName('');
+        // 恢复背景滚动
+        document.body.style.overflow = 'auto';
+    };
+
     // 处理导航点击事件
-    const handleNavClick = (id) => {
+    const handleNavClick = (id, name) => {
         if (id === 'datahub') {
             router.push('/datahub');
+            return;
+        }
+
+        // 检查是否是开发中的功能
+        if (id === 'home-services' || id === 'storage-shipping') {
+            openModal(name);
+            setIsMobileMenuOpen(false);
             return;
         }
 
@@ -38,52 +63,105 @@ export default function Header() {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
 
+    // ESC键关闭弹窗
+    const handleKeyDown = (e) => {
+        if (e.key === 'Escape' && isModalOpen) {
+            closeModal();
+        }
+    };
+
     return (
-        <header className="header">
-            <div className="header-container">
-                {/* Logo部分 */}
-                <div className="logo">
-                    <span className="logo-text">SubletMatcher 智能匹配找房</span>
+        <>
+            <header className="header">
+                <div className="header-container">
+                    {/* Logo部分 */}
+                    <div className="logo">
+                        <span className="logo-text">SubletMatcher 智能匹配找房</span>
+                    </div>
+
+                    {/* 桌面端导航 */}
+                    <nav className="desktop-nav">
+                        {navItems.map((item) => (
+                            <button
+                                key={item.id}
+                                className="nav-item"
+                                onClick={() => handleNavClick(item.id, item.name)}
+                            >
+                                {item.name}
+                            </button>
+                        ))}
+                    </nav>
+
+                    {/* 移动端菜单按钮 */}
+                    <button
+                        className="mobile-menu-button"
+                        onClick={toggleMobileMenu}
+                    >
+                        <span className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </button>
                 </div>
 
-                {/* 桌面端导航 */}
-                <nav className="desktop-nav">
+                {/* 移动端导航菜单 */}
+                <div className={`mobile-nav ${isMobileMenuOpen ? 'open' : ''}`}>
                     {navItems.map((item) => (
                         <button
                             key={item.id}
-                            className="nav-item"
-                            onClick={() => handleNavClick(item.id)}
+                            className="mobile-nav-item"
+                            onClick={() => handleNavClick(item.id, item.name)}
                         >
                             {item.name}
                         </button>
                     ))}
-                </nav>
+                </div>
+            </header>
 
-                {/* 移动端菜单按钮 */}
-                <button
-                    className="mobile-menu-button"
-                    onClick={toggleMobileMenu}
+            {/* 弹窗组件 */}
+            {isModalOpen && (
+                <div
+                    className="modal-overlay"
+                    onClick={(e) => e.target === e.currentTarget ? closeModal() : null}
+                    onKeyDown={handleKeyDown}
+                    tabIndex="-1"
                 >
-                    <span className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </span>
-                </button>
-            </div>
+                    <div className="modal">
+                        <button className="close-btn" onClick={closeModal}>
+                            &times;
+                        </button>
 
-            {/* 移动端导航菜单 */}
-            <div className={`mobile-nav ${isMobileMenuOpen ? 'open' : ''}`}>
-                {navItems.map((item) => (
-                    <button
-                        key={item.id}
-                        className="mobile-nav-item"
-                        onClick={() => handleNavClick(item.id)}
-                    >
-                        {item.name}
-                    </button>
-                ))}
-            </div>
+                        <div className="modal-icon">
+                            🚀
+                        </div>
+
+                        <div className="modal-title">感谢您使用 SubletMatcher</div>
+                        <div className="modal-subtitle">{modalFeatureName}功能还在开发中</div>
+
+                        <div className="modal-content">
+                            我们正在努力开发这个功能，为您提供更好的服务体验。敬请期待我们即将推出的新功能！
+                        </div>
+
+                        <div className="contact-info">
+                            <div className="contact-label">如有疑问，请联系我们：</div>
+                            <div className="contact-email">subletmatcher@gmail.com</div>
+                        </div>
+
+                        <div className="modal-buttons">
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => window.open('mailto:subletmatcher@gmail.com')}
+                            >
+                                联系我们
+                            </button>
+                            <button className="btn btn-secondary" onClick={closeModal}>
+                                知道了
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <style jsx>{`
                 .header {
@@ -248,6 +326,167 @@ export default function Header() {
                     border-bottom: none;
                 }
 
+                /* 弹窗样式 */
+                .modal-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.6);
+                    backdrop-filter: blur(5px);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 2000;
+                    animation: fadeIn 0.3s ease;
+                }
+
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                .modal {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 40px;
+                    max-width: 500px;
+                    width: 90%;
+                    position: relative;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                    animation: slideIn 0.3s ease;
+                    text-align: center;
+                }
+
+                @keyframes slideIn {
+                    from {
+                        transform: scale(0.7) translateY(50px);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: scale(1) translateY(0);
+                        opacity: 1;
+                    }
+                }
+
+                .close-btn {
+                    position: absolute;
+                    top: 15px;
+                    right: 20px;
+                    background: none;
+                    border: none;
+                    font-size: 24px;
+                    color: #999;
+                    cursor: pointer;
+                    transition: color 0.3s ease;
+                    width: 30px;
+                    height: 30px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .close-btn:hover {
+                    color: #333;
+                }
+
+                .modal-icon {
+                    width: 80px;
+                    height: 80px;
+                    margin: 0 auto 20px;
+                    background: linear-gradient(135deg, #8b7ef4 0%, #667eea 100%);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 40px;
+                    color: white;
+                }
+
+                .modal-title {
+                    font-size: 24px;
+                    color: #333;
+                    margin-bottom: 10px;
+                    font-weight: 600;
+                }
+
+                .modal-subtitle {
+                    font-size: 16px;
+                    color: #8b7ef4;
+                    margin-bottom: 20px;
+                    font-weight: 500;
+                }
+
+                .modal-content {
+                    font-size: 16px;
+                    color: #666;
+                    line-height: 1.6;
+                    margin-bottom: 30px;
+                    text-align: left;
+                }
+
+                .contact-info {
+                    background: #f8f9ff;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin-bottom: 25px;
+                    border-left: 4px solid #8b7ef4;
+                    text-align: left;
+                }
+
+                .contact-label {
+                    font-size: 14px;
+                    color: #888;
+                    margin-bottom: 8px;
+                }
+
+                .contact-email {
+                    font-size: 16px;
+                    color: #8b7ef4;
+                    font-weight: 500;
+                    word-break: break-all;
+                }
+
+                .modal-buttons {
+                    display: flex;
+                    gap: 15px;
+                    justify-content: center;
+                }
+
+                .btn {
+                    padding: 12px 30px;
+                    border-radius: 25px;
+                    border: none;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    font-weight: 500;
+                }
+
+                .btn-primary {
+                    background: linear-gradient(135deg, #8b7ef4 0%, #667eea 100%);
+                    color: white;
+                }
+
+                .btn-primary:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(139, 126, 244, 0.4);
+                }
+
+                .btn-secondary {
+                    background: #f0f0f0;
+                    color: #666;
+                }
+
+                .btn-secondary:hover {
+                    background: #e0e0e0;
+                }
+
                 /* 响应式设计 */
                 @media (max-width: 768px) {
                     .header-container {
@@ -266,6 +505,19 @@ export default function Header() {
                     .mobile-menu-button {
                         display: block;
                     }
+
+                    .modal {
+                        padding: 30px 20px;
+                        margin: 20px;
+                    }
+                    
+                    .modal-buttons {
+                        flex-direction: column;
+                    }
+                    
+                    .btn {
+                        width: 100%;
+                    }
                 }
 
                 @media (max-width: 480px) {
@@ -275,16 +527,16 @@ export default function Header() {
                 }
 
                 /* 为页面内容添加顶部间距，避免被固定header遮挡 */
-                body {
+                :global(body) {
                     padding-top: 70px;
                 }
 
                 @media (max-width: 768px) {
-                    body {
+                    :global(body) {
                         padding-top: 60px;
                     }
                 }
             `}</style>
-        </header>
+        </>
     );
 }

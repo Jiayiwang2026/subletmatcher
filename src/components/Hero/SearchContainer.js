@@ -32,12 +32,30 @@ export default function SearchContainer() {
         }));
     };
 
+    // 修复日历点击问题
     const openDatePicker = (type) => {
         const pickerId = `${type}-date-picker`;
         const picker = document.getElementById(pickerId);
         if (picker) {
-            picker.focus();
-            picker.click();
+            // 尝试多种方法打开日期选择器
+            try {
+                if (picker.showPicker) {
+                    picker.showPicker();
+                } else {
+                    picker.focus();
+                    picker.click();
+                    // 触发点击事件
+                    const event = new MouseEvent('click', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    picker.dispatchEvent(event);
+                }
+            } catch (error) {
+                // 如果上面的方法都失败，尝试直接聚焦
+                picker.focus();
+            }
         }
     };
 
@@ -255,280 +273,307 @@ export default function SearchContainer() {
             )}
 
             <style jsx>{`
-        .search-container {
-          background: rgba(255, 255, 255, 0.15);
-          backdrop-filter: blur(20px);
-          border-radius: 20px;
-          padding: 30px;
-          max-width: 900px;
-          width: 100%;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          opacity: 0;
-          transform: translateY(30px);
-          animation: slideUp 1s ease-out 0.9s forwards;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .search-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 15px;
-          margin-bottom: 20px;
-        }
+                .search-container {
+                    background: rgba(255, 255, 255, 0.15);
+                    backdrop-filter: blur(20px);
+                    border-radius: 20px;
+                    padding: 30px;
+                    max-width: 900px;
+                    width: 100%;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    opacity: 0;
+                    transform: translateY(30px);
+                    animation: slideUp 1s ease-out 0.9s forwards;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                }
 
-        .input-group {
-          position: relative;
-        }
+                .search-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 15px;
+                    margin-bottom: 20px;
+                }
 
-        .date-input-group {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
+                .input-group {
+                    position: relative;
+                }
 
-        .date-text-input {
-          width: 100%;
-          padding: 15px 60px 15px 20px;
-          border: none;
-          border-radius: 12px;
-          background: rgba(255, 255, 255, 0.9);
-          font-size: 16px;
-          transition: all 0.3s ease;
-          backdrop-filter: blur(10px);
-        }
+                .date-input-group {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                }
 
-        .date-picker-hidden {
-          position: absolute;
-          opacity: 0;
-          pointer-events: none;
-          z-index: -1;
-        }
+                .date-text-input {
+                    width: 100%;
+                    padding: 15px 60px 15px 20px;
+                    border: none;
+                    border-radius: 12px;
+                    background: rgba(255, 255, 255, 0.9);
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    backdrop-filter: blur(10px);
+                    color: #333 !important; /* 强制设置深色文字 */
+                }
 
-        .calendar-btn {
-          position: absolute;
-          right: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: linear-gradient(45deg, #667eea, #764ba2);
-          color: white;
-          border: none;
-          font-size: 16px;
-          cursor: pointer;
-          padding: 8px 10px;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-          z-index: 2;
-          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-          min-width: 36px;
-          height: 36px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
+                .date-text-input::placeholder {
+                    color: #666 !important; /* 占位符颜色 */
+                }
 
-        .calendar-btn:hover {
-          background: linear-gradient(45deg, #5a6fd8, #6a4190);
-          transform: translateY(-50%) scale(1.05);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
+                .date-picker-hidden {
+                    position: absolute;
+                    opacity: 0;
+                    pointer-events: none;
+                    z-index: -1;
+                    width: 1px;
+                    height: 1px;
+                    top: 0;
+                    left: 0;
+                }
 
-        .date-label {
-          position: absolute;
-          top: -8px;
-          left: 15px;
-          background: rgba(255, 255, 255, 0.9);
-          padding: 2px 8px;
-          font-size: 12px;
-          color: #666;
-          border-radius: 4px;
-          pointer-events: none;
-          transition: all 0.3s ease;
-          z-index: 3;
-        }
+                .calendar-btn {
+                    position: absolute;
+                    right: 12px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: linear-gradient(45deg, #667eea, #764ba2);
+                    color: white;
+                    border: none;
+                    font-size: 16px;
+                    cursor: pointer;
+                    padding: 8px 10px;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    z-index: 2;
+                    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+                    min-width: 36px;
+                    height: 36px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
 
-        .input-group input,
-        .input-group select {
-          width: 100%;
-          padding: 15px 20px;
-          border: none;
-          border-radius: 12px;
-          background: rgba(255, 255, 255, 0.9);
-          font-size: 16px;
-          transition: all 0.3s ease;
-          backdrop-filter: blur(10px);
-        }
+                .calendar-btn:hover {
+                    background: linear-gradient(45deg, #5a6fd8, #6a4190);
+                    transform: translateY(-50%) scale(1.05);
+                    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+                }
 
-        .input-group input:focus,
-        .input-group select:focus,
-        .date-text-input:focus {
-          outline: none;
-          background: white;
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
+                .date-label {
+                    position: absolute;
+                    top: -8px;
+                    left: 15px;
+                    background: rgba(255, 255, 255, 0.9);
+                    padding: 2px 8px;
+                    font-size: 12px;
+                    color: #666 !important; /* 强制设置标签颜色 */
+                    border-radius: 4px;
+                    pointer-events: none;
+                    transition: all 0.3s ease;
+                    z-index: 3;
+                }
 
-        .search-btn {
-          width: 100%;
-          padding: 15px 30px;
-          border: none;
-          border-radius: 12px;
-          background: linear-gradient(45deg, #667eea, #764ba2);
-          color: white;
-          font-size: 18px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          position: relative;
-          overflow: hidden;
-        }
+                .input-group input,
+                .input-group select {
+                    width: 100%;
+                    padding: 15px 20px;
+                    border: none;
+                    border-radius: 12px;
+                    background: rgba(255, 255, 255, 0.9);
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    backdrop-filter: blur(10px);
+                    color: #333 !important; /* 强制设置深色文字 */
+                }
 
-        .search-btn:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
-        }
+                .input-group input::placeholder {
+                    color: #666 !important;
+                }
 
-        .search-btn:disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-        }
+                .input-group select option {
+                    color: #333 !important;
+                    background: white;
+                }
 
-        .results-container {
-          margin-top: 30px;
-          opacity: 0;
-          transform: translateY(20px);
-          transition: all 0.5s ease;
-        }
+                .input-group input:focus,
+                .input-group select:focus,
+                .date-text-input:focus {
+                    outline: none;
+                    background: white;
+                    transform: translateY(-2px);
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                    color: #333 !important;
+                }
 
-        .results-container.show {
-          opacity: 1;
-          transform: translateY(0);
-        }
+                .search-btn {
+                    width: 100%;
+                    padding: 15px 30px;
+                    border: none;
+                    border-radius: 12px;
+                    background: linear-gradient(45deg, #667eea, #764ba2);
+                    color: white;
+                    font-size: 18px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
 
-        .results-header {
-          text-align: center;
-          margin-bottom: 20px;
-          color: white;
-        }
+                .search-btn:hover:not(:disabled) {
+                    transform: translateY(-2px);
+                    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4));
+                }
 
-        .results-grid {
-          display: grid;
-          gap: 20px;
-          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        }
+                .search-btn:disabled {
+                    opacity: 0.7;
+                    cursor: not-allowed;
+                }
 
-        .listing-card {
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(20px);
-          border-radius: 15px;
-          padding: 25px;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          transition: all 0.3s ease;
-          cursor: pointer;
-          position: relative;
-          overflow: hidden;
-        }
+                .results-container {
+                    margin-top: 30px;
+                    opacity: 0;
+                    transform: translateY(20px);
+                    transition: all 0.5s ease;
+                }
 
-        .listing-card:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
+                .results-container.show {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
 
-        .listing-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 4px;
-          background: linear-gradient(45deg, #667eea, #764ba2);
-        }
+                .results-header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                    color: white;
+                }
 
-        .match-score {
-          position: absolute;
-          top: 15px;
-          right: 15px;
-          background: linear-gradient(45deg, #4CAF50, #45a049);
-          color: white;
-          padding: 5px 12px;
-          border-radius: 20px;
-          font-size: 14px;
-          font-weight: 600;
-        }
+                .results-grid {
+                    display: grid;
+                    gap: 20px;
+                    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                }
 
-        .listing-title {
-          font-size: 20px;
-          font-weight: 700;
-          margin-bottom: 15px;
-          color: #333;
-        }
+                .listing-card {
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(20px);
+                    border-radius: 15px;
+                    padding: 25px;
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    position: relative;
+                    overflow: hidden;
+                }
 
-        .listing-details {
-          display: grid;
-          gap: 8px;
-          margin-bottom: 15px;
-          font-size: 14px;
-          color: #666;
-        }
+                .listing-card:hover {
+                    transform: translateY(-10px);
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+                }
 
-        .detail-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 10px;
-        }
+                .listing-card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 4px;
+                    background: linear-gradient(45deg, #667eea, #764ba2);
+                }
 
-        .detail-label {
-          font-weight: 600;
-          flex-shrink: 0;
-        }
+                .match-score {
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    background: linear-gradient(45deg, #4CAF50, #45a049);
+                    color: white;
+                    padding: 5px 12px;
+                    border-radius: 20px;
+                    font-size: 14px;
+                    font-weight: 600;
+                }
 
-        .price {
-          color: #667eea;
-          font-weight: 700;
-          font-size: 18px;
-        }
+                .listing-title {
+                    font-size: 20px;
+                    font-weight: 700;
+                    margin-bottom: 15px;
+                    color: #333;
+                }
 
-        .view-btn {
-          width: 100%;
-          padding: 12px;
-          border: none;
-          border-radius: 8px;
-          background: linear-gradient(45deg, #667eea, #764ba2);
-          color: white;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
+                .listing-details {
+                    display: grid;
+                    gap: 8px;
+                    margin-bottom: 15px;
+                    font-size: 14px;
+                    color: #666;
+                }
 
-        .view-btn:hover {
-          opacity: 0.9;
-          transform: translateY(-1px);
-        }
+                .detail-row {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 10px;
+                }
 
-        .no-results {
-          text-align: center;
-          padding: 40px;
-          background: rgba(255, 255, 255, 0.9);
-          border-radius: 15px;
-          color: #666;
-        }
+                .detail-label {
+                    font-weight: 600;
+                    flex-shrink: 0;
+                }
 
-        .no-results h3 {
-          margin-bottom: 15px;
-          color: #333;
-        }
+                .price {
+                    color: #667eea;
+                    font-weight: 700;
+                    font-size: 18px;
+                }
 
-        @media (max-width: 768px) {
-          .search-container {
-            margin: 0 15px;
-            padding: 25px 20px;
-          }
-          
-          .search-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-      `}</style>
+                .view-btn {
+                    width: 100%;
+                    padding: 12px;
+                    border: none;
+                    border-radius: 8px;
+                    background: linear-gradient(45deg, #667eea, #764ba2);
+                    color: white;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .view-btn:hover {
+                    opacity: 0.9;
+                    transform: translateY(-1px);
+                }
+
+                .no-results {
+                    text-align: center;
+                    padding: 40px;
+                    background: rgba(255, 255, 255, 0.9);
+                    border-radius: 15px;
+                    color: #666;
+                }
+
+                .no-results h3 {
+                    margin-bottom: 15px;
+                    color: #333;
+                }
+
+                @keyframes slideUp {
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .search-container {
+                        margin: 0 15px;
+                        padding: 25px 20px;
+                    }
+
+                    .search-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            `}</style>
         </div>
     );
 }
