@@ -12,7 +12,7 @@ const handleNavClick = (id) => {
 
     scrollToSection(id);
     setIsMobileMenuOpen(false);
-}
+};
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -25,7 +25,7 @@ export default function Header() {
     };
 
     const navItems = [
-        { name: '转/长租房', id: 'datahub' },
+        { name: '转租房源', id: 'datahub' },
         { name: '家居帮手', id: 'home-services' },
         { name: '寄存/转运', id: 'storage-shipping' },
         { name: 'News', id: 'news' },
@@ -33,8 +33,14 @@ export default function Header() {
         { name: '联系我们', id: 'contact' },
         { name: '打赏', id: 'donation' }
     ];
-
     const handleNavClick = (id) => {
+        if (id === 'datahub') {
+            // 跳转到数据中心页面
+            window.location.href = '/datahub';
+            return;
+        }
+
+        // 原有的滚动逻辑
         scrollToSection(id);
         setIsMobileMenuOpen(false); // 关闭移动端菜单
     };
