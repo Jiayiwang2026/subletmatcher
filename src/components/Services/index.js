@@ -114,15 +114,15 @@ export default function Services() {
 
                 .services-grid {
                     display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                    gap: 30px;
-                    margin-bottom: 100px;
+                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                    gap: 20px;
+                    margin-bottom: 80px;
                 }
 
                 .service-card {
                     background: rgba(255, 255, 255, 0.05);
-                    border-radius: 16px;
-                    padding: 30px 20px;
+                    border-radius: 12px;
+                    padding: 20px 15px;
                     text-align: center;
                     transition: all 0.3s ease;
                     backdrop-filter: blur(10px);
@@ -136,36 +136,36 @@ export default function Services() {
                 }
 
                 .service-icon {
-                    font-size: 48px;
-                    margin-bottom: 16px;
+                    font-size: 36px;
+                    margin-bottom: 12px;
                     display: block;
                 }
 
                 .service-title {
-                    font-size: 20px;
+                    font-size: 18px;
                     font-weight: 600;
                     color: #333;
-                    margin-bottom: 12px;
+                    margin-bottom: 8px;
                     line-height: 1.3;
                 }
 
                 .service-description {
-                    font-size: 14px;
-                    line-height: 1.5;
+                    font-size: 13px;
+                    line-height: 1.4;
                     color: #666;
-                    margin-bottom: 20px;
-                    height: 60px;
+                    margin-bottom: 16px;
+                    height: 45px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                 }
 
                 .service-button {
-                    padding: 8px 20px;
-                    font-size: 14px;
+                    padding: 6px 16px;
+                    font-size: 13px;
                     font-weight: 600;
                     border: 2px solid transparent;
-                    border-radius: 6px;
+                    border-radius: 5px;
                     background: linear-gradient(45deg, #667eea, #764ba2);
                     color: white;
                     cursor: pointer;
@@ -232,13 +232,13 @@ export default function Services() {
                     }
 
                     .services-grid {
-                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                        gap: 20px;
-                        margin-bottom: 60px;
+                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                        gap: 15px;
+                        margin-bottom: 50px;
                     }
 
                     .service-card {
-                        padding: 24px 16px;
+                        padding: 18px 12px;
                     }
 
                     .service-description {
