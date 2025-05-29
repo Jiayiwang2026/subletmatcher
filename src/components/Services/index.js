@@ -1,120 +1,96 @@
 export default function Services() {
     const services = [
         {
-            id: 'rental',
-            title: '长租房服务',
-            description: '为国际学生和年轻专业人士提供全方位的住房解决方案，让您在异国他乡也能找到温馨的家。我们的服务涵盖从寻找合适住所到入住后的全程支持。',
-            items: [
-                {
-                    icon: '🏢',
-                    title: '公寓长租',
-                    description: '提供1-12个月长期租赁服务，精选优质公寓，确保安全舒适的居住环境。我们与可靠的房东建立了长期合作关系，为您提供稳定的住房解决方案。'
-                },
-                {
-                    icon: '🤝',
-                    title: '室友匹配',
-                    description: '智能匹配系统帮您找到合适的室友，通过详细的个人偏好分析，确保生活习惯相容。不仅降低租房成本，更能建立珍贵的友谊，提升整体居住体验。'
-                },
-                {
-                    icon: '📋',
-                    title: '租约咨询',
-                    description: '专业的法律顾问团队为您审核租约条款，解读复杂的法律术语，确保您的权益得到充分保障。从签约到退房，全程提供专业指导和建议。'
-                }
-            ]
+            icon: '🏢',
+            title: '公寓长租',
+            description: '提供1-12个月长期租赁服务，精选优质公寓，确保安全舒适的居住环境。'
         },
         {
-            id: 'furniture',
-            title: '家居帮手',
-            description: '一站式家居服务，让您的新家瞬间变得温馨舒适。从家具租赁到维修服务，我们提供全方位的家居解决方案，让您专注于学习和工作。',
-            items: [
-                {
-                    icon: '🚚',
-                    title: '家具租赁',
-                    description: '精选高品质家具，提供灵活的租赁方案。无论是短期需求还是长期使用，都能找到合适的选择。拎包入住，无需承担购买大件家具的负担和搬运困扰。'
-                },
-                {
-                    icon: '🔧',
-                    title: '安装维修',
-                    description: '专业技师团队提供家具安装和维修服务，解决您居住中遇到的各种问题。快速响应，专业服务，让您的生活空间始终保持最佳状态。'
-                },
-                {
-                    icon: '🏠',
-                    title: '搬家服务',
-                    description: '提供专业的搬家打包服务，经验丰富的搬运团队确保您的物品安全转移。从打包到运输，从搬运到安置，让您的搬迁过程轻松无忧。'
-                }
-            ]
+            icon: '🤝',
+            title: '室友匹配',
+            description: '智能匹配系统帮您找到合适的室友，降低租房成本，提升居住体验。'
         },
         {
-            id: 'storage',
-            title: '寄存/转运服务',
-            description: '连接全球的物流服务，为海外华人提供便捷的物品寄存和国际转运解决方案。无论是临时寄存还是跨国转运，我们都能提供安全可靠的服务。',
-            items: [
-                {
-                    icon: '🧳',
-                    title: '行李寄存',
-                    description: '安全可靠的行李寄存服务，配备先进的安保系统和恒温恒湿环境。短期长期存储皆可，灵活的取存时间安排，让您的出行更加自由便捷。'
-                },
-                {
-                    icon: '📦',
-                    title: '包裹转运',
-                    description: '专业的国际包裹转运服务，连接中美两地的便民桥梁。快速清关，安全运输，实时跟踪，让您的重要物品跨越千山万水，安全到达目的地。'
-                }
-            ]
+            icon: '📋',
+            title: '租约咨询',
+            description: '专业的法律顾问团队为您审核租约条款，保障您的租房权益。'
+        },
+        {
+            icon: '🚚',
+            title: '家具租赁',
+            description: '精选高品质家具，提供灵活的租赁方案，拎包入住无需购买大件家具。'
+        },
+        {
+            icon: '🔧',
+            title: '安装维修',
+            description: '专业技师团队提供家具安装和维修服务，快速响应各种居住问题。'
+        },
+        {
+            icon: '🏠',
+            title: '搬家服务',
+            description: '提供专业的搬家打包服务，让您的搬迁过程轻松无忧。'
+        },
+        {
+            icon: '🧳',
+            title: '行李寄存',
+            description: '安全可靠的行李寄存服务，配备先进安保系统，灵活存取时间。'
+        },
+        {
+            icon: '📦',
+            title: '包裹转运',
+            description: '专业的国际包裹转运服务，连接中美两地，安全快速到达。'
         }
     ];
 
     return (
-        <div>
-            {services.map((service, serviceIndex) => (
-                <section key={service.id} className="info-section">
-                    <div className="section-header">
-                        <h2 className="section-title">{service.title}</h2>
-                        <div className="title-underline"></div>
-                        <p className="section-description">{service.description}</p>
-                    </div>
+        <div className="services-container">
+            {/* 主标题部分 */}
+            <div className="hero-section">
+                <h1 className="main-title">全方位生活服务</h1>
+                <div className="title-underline"></div>
+                <p className="main-description">
+                    为国际学生和年轻专业人士提供一站式生活解决方案，让您在异国他乡也能享受便捷舒适的生活体验。
+                    从住房到家居，从寄存到转运，我们用心服务每一个细节。
+                </p>
+            </div>
 
-                    <div className="services-grid">
-                        {service.items.map((item, index) => (
-                            <div key={index} className="service-item">
-                                <div className="service-icon">{item.icon}</div>
-                                <h3 className="service-title">{item.title}</h3>
-                                <p className="service-description">{item.description}</p>
-                            </div>
-                        ))}
+            {/* 服务网格 */}
+            <div className="services-grid">
+                {services.map((service, index) => (
+                    <div key={index} className="service-card">
+                        <div className="service-icon">{service.icon}</div>
+                        <h3 className="service-title">{service.title}</h3>
+                        <p className="service-description">{service.description}</p>
+                        <button className="service-button">了解详情</button>
                     </div>
+                ))}
+            </div>
 
-                    <div className="section-action">
-                        <button className="cta-button">了解更多服务详情</button>
-                    </div>
-
-                    {serviceIndex === services.length - 1 && (
-                        <div className="quote-section">
-                            <div className="service-quote">
-                                我们的使命不仅仅是提供服务，而是要成为您在异国他乡最可靠的伙伴，让每一位客户都能感受到家的温暖。
-                            </div>
-                            <p className="quote-detail">
-                                我们深知留学生活的不易，因此在每一个细节上都精益求精。无论是深夜的紧急维修，还是节假日的贴心关怀，我们都会第一时间响应您的需求。选择我们，就是选择了一个可以依靠的家。
-                            </p>
-                        </div>
-                    )}
-                </section>
-            ))}
+            {/* 底部行动区域 */}
+            <div className="bottom-action">
+                <div className="action-content">
+                    <h2>准备开始您的便捷生活？</h2>
+                    <p>我们的专业团队随时为您提供个性化的服务方案</p>
+                    <button className="main-cta-button">立即咨询所有服务</button>
+                </div>
+            </div>
 
             <style jsx>{`
-                .info-section {
-                    padding: 80px 20px;
-                    max-width: 1200px;
+                .services-container {
+                    min-height: 100vh;
+                    padding: 60px 20px;
+                    max-width: 1400px;
                     margin: 0 auto;
                     background: transparent;
                 }
 
-                .section-header {
-                    text-align: left;
-                    margin-bottom: 60px;
+                .hero-section {
+                    text-align: center;
+                    margin-bottom: 80px;
                 }
 
-                .section-title {
-                    font-size: 48px;
+                .main-title {
+                    font-size: 56px;
                     font-weight: 300;
                     color: #333;
                     margin-bottom: 20px;
@@ -122,64 +98,113 @@ export default function Services() {
                 }
 
                 .title-underline {
-                    width: 80px;
-                    height: 3px;
+                    width: 100px;
+                    height: 4px;
                     background: linear-gradient(45deg, #667eea, #764ba2);
-                    margin-bottom: 30px;
+                    margin: 0 auto 40px;
                 }
 
-                .section-description {
-                    font-size: 18px;
+                .main-description {
+                    font-size: 20px;
                     line-height: 1.7;
                     color: #666;
-                    max-width: 800px;
-                    margin-bottom: 20px;
+                    max-width: 900px;
+                    margin: 0 auto;
                 }
 
                 .services-grid {
                     display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-                    gap: 40px;
-                    margin-bottom: 60px;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 30px;
+                    margin-bottom: 100px;
                 }
 
-                .service-item {
+                .service-card {
+                    background: rgba(255, 255, 255, 0.05);
+                    border-radius: 16px;
+                    padding: 30px 20px;
                     text-align: center;
-                    padding: 0;
+                    transition: all 0.3s ease;
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                }
+
+                .service-card:hover {
+                    transform: translateY(-8px);
+                    background: rgba(255, 255, 255, 0.1);
+                    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
                 }
 
                 .service-icon {
-                    font-size: 64px;
-                    margin-bottom: 20px;
+                    font-size: 48px;
+                    margin-bottom: 16px;
                     display: block;
                 }
 
                 .service-title {
-                    font-size: 24px;
+                    font-size: 20px;
                     font-weight: 600;
                     color: #333;
-                    margin-bottom: 20px;
+                    margin-bottom: 12px;
                     line-height: 1.3;
                 }
 
                 .service-description {
-                    font-size: 16px;
-                    line-height: 1.6;
+                    font-size: 14px;
+                    line-height: 1.5;
                     color: #666;
-                    text-align: left;
+                    margin-bottom: 20px;
+                    height: 60px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
 
-                .section-action {
+                .service-button {
+                    padding: 8px 20px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    border: 2px solid transparent;
+                    border-radius: 6px;
+                    background: linear-gradient(45deg, #667eea, #764ba2);
+                    color: white;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .service-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+                }
+
+                .bottom-action {
                     text-align: center;
-                    margin-bottom: 80px;
+                    padding: 60px 40px;
+                    background: rgba(247, 249, 252, 0.8);
+                    border-radius: 20px;
+                    backdrop-filter: blur(10px);
                 }
 
-                .cta-button {
-                    padding: 15px 40px;
-                    font-size: 16px;
+                .action-content h2 {
+                    font-size: 32px;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 16px;
+                }
+
+                .action-content p {
+                    font-size: 18px;
+                    color: #666;
+                    margin-bottom: 32px;
+                    line-height: 1.6;
+                }
+
+                .main-cta-button {
+                    padding: 16px 48px;
+                    font-size: 18px;
                     font-weight: 600;
                     border: none;
-                    border-radius: 8px;
+                    border-radius: 10px;
                     background: linear-gradient(45deg, #667eea, #764ba2);
                     color: white;
                     cursor: pointer;
@@ -188,66 +213,60 @@ export default function Services() {
                     letter-spacing: 1px;
                 }
 
-                .cta-button:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
-                }
-
-                .quote-section {
-                    margin-top: 80px;
-                    padding: 60px 40px;
-                    background: rgba(247, 249, 252, 0.8);
-                    border-radius: 15px;
-                    text-align: center;
-                }
-
-                .service-quote {
-                    font-size: 24px;
-                    font-style: italic;
-                    color: #333;
-                    line-height: 1.5;
-                    margin-bottom: 40px;
-                    font-weight: 300;
-                    position: relative;
-                }
-
-                .quote-detail {
-                    font-size: 16px;
-                    line-height: 1.7;
-                    color: #666;
-                    max-width: 700px;
-                    margin: 0 auto;
-                    text-align: left;
+                .main-cta-button:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
                 }
 
                 @media (max-width: 768px) {
-                    .info-section {
-                        padding: 60px 15px;
+                    .services-container {
+                        padding: 40px 15px;
                     }
 
-                    .section-title {
-                        font-size: 36px;
+                    .main-title {
+                        font-size: 42px;
+                    }
+
+                    .main-description {
+                        font-size: 18px;
                     }
 
                     .services-grid {
-                        grid-template-columns: 1fr;
-                        gap: 30px;
+                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                        gap: 20px;
+                        margin-bottom: 60px;
                     }
 
-                    .service-item {
-                        text-align: center;
+                    .service-card {
+                        padding: 24px 16px;
                     }
 
                     .service-description {
-                        text-align: center;
+                        height: auto;
+                        min-height: 50px;
                     }
 
-                    .quote-section {
+                    .bottom-action {
                         padding: 40px 20px;
                     }
 
-                    .service-quote {
-                        font-size: 20px;
+                    .action-content h2 {
+                        font-size: 26px;
+                    }
+
+                    .main-cta-button {
+                        padding: 14px 32px;
+                        font-size: 16px;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .services-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .main-title {
+                        font-size: 36px;
                     }
                 }
             `}</style>
