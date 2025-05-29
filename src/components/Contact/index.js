@@ -100,7 +100,10 @@ export default function Contact() {
             return { success: true };
         } catch (error) {
             console.error('邮件发送失败:', error);
-            return { success: false, error: error.message };
+            return {
+                success: false,
+                error: error.text || error.message || '邮件服务异常'
+            };
         }
     };
 
@@ -139,7 +142,10 @@ export default function Contact() {
             return { success: true };
         } catch (error) {
             console.error('邮件发送失败:', error);
-            return { success: false, error: error.message };
+            return {
+                success: false,
+                error: error.text || error.message || '邮件服务异常'
+            };
         }
     };
 
@@ -170,11 +176,13 @@ export default function Contact() {
                     email_address: ''
                 });
             } else {
-                alert('❌ 提交失败，请稍后重试或直接联系我们。错误信息：' + emailResult.error);
+                const errorMessage = emailResult.error || emailResult.message || '未知错误';
+                alert('❌ 提交失败，请稍后重试或直接联系我们。错误信息：' + errorMessage);
             }
         } catch (error) {
             console.error('提交失败:', error);
-            alert('❌ 网络错误，请检查网络连接后重试。');
+            const errorMessage = error.message || error.text || '网络连接异常';
+            alert('❌ 网络错误，请检查网络连接后重试。错误详情：' + errorMessage);
         } finally {
             setIsSubmitting(prev => ({ ...prev, publish: false }));
         }
@@ -207,11 +215,13 @@ export default function Contact() {
                     notes: ''
                 });
             } else {
-                alert('❌ 提交失败，请稍后重试或直接联系我们。错误信息：' + emailResult.error);
+                const errorMessage = emailResult.error || emailResult.message || '未知错误';
+                alert('❌ 提交失败，请稍后重试或直接联系我们。错误信息：' + errorMessage);
             }
         } catch (error) {
             console.error('提交失败:', error);
-            alert('❌ 网络错误，请检查网络连接后重试。');
+            const errorMessage = error.message || error.text || '网络连接异常';
+            alert('❌ 网络错误，请检查网络连接后重试。错误详情：' + errorMessage);
         } finally {
             setIsSubmitting(prev => ({ ...prev, contact: false }));
         }
