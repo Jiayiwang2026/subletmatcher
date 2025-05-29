@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Header() {
@@ -64,11 +64,21 @@ export default function Header() {
     };
 
     // ESC键关闭弹窗
-    const handleKeyDown = (e) => {
-        if (e.key === 'Escape' && isModalOpen) {
-            closeModal();
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape' && isModalOpen) {
+                closeModal();
+            }
+        };
+
+        if (isModalOpen) {
+            document.addEventListener('keydown', handleKeyDown);
         }
-    };
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isModalOpen]);
 
     return (
         <>
@@ -123,9 +133,11 @@ export default function Header() {
             {isModalOpen && (
                 <div
                     className="modal-overlay"
-                    onClick={(e) => e.target === e.currentTarget ? closeModal() : null}
-                    onKeyDown={handleKeyDown}
-                    tabIndex="-1"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            closeModal();
+                        }
+                    }}
                 >
                     <div className="modal">
                         <button className="close-btn" onClick={closeModal}>
@@ -510,11 +522,11 @@ export default function Header() {
                         padding: 30px 20px;
                         margin: 20px;
                     }
-                    
+
                     .modal-buttons {
                         flex-direction: column;
                     }
-                    
+
                     .btn {
                         width: 100%;
                     }
