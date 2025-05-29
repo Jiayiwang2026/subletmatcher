@@ -59,7 +59,7 @@ export default function Contact() {
     const sendPublishEmail = async (formData) => {
         // 构建邮件模板参数
         const templateParams = {
-            to_email: 'YOUR_EMAIL@example.com',  // 替换为你的邮箱
+            to_email: 'subletmatcher@gmail.com',  // 替换为你的邮箱
             from_name: formData.contact_name,
             subject: '新房源发布 - ' + formData.room_type + ' - $' + formData.monthly_rent,
 
