@@ -83,7 +83,6 @@ export default function Services() {
                         <div className="service-icon">{service.icon}</div>
                         <h3 className="service-title">{service.title}</h3>
                         <p className="service-description">{service.description}</p>
-                        <button className="service-button">了解详情</button>
                     </div>
                 ))}
             </div>

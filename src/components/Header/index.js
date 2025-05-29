@@ -1,5 +1,18 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
+// 然后在组件内部
+const router = useRouter();
+
+const handleNavClick = (id) => {
+    if (id === 'datahub') {
+        router.push('/datahub');
+        return;
+    }
+
+    scrollToSection(id);
+    setIsMobileMenuOpen(false);
+}
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -12,7 +25,7 @@ export default function Header() {
     };
 
     const navItems = [
-        { name: '长租房', id: 'long-term-rental' },
+        { name: '转/长租房', id: 'datahub' },
         { name: '家居帮手', id: 'home-services' },
         { name: '寄存/转运', id: 'storage-shipping' },
         { name: 'News', id: 'news' },
