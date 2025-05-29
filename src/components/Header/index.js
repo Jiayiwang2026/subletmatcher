@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 // 然后在组件内部
-const router = useRouter();
+
 
 const handleNavClick = (id) => {
     if (id === 'datahub') {
@@ -15,6 +15,7 @@ const handleNavClick = (id) => {
 };
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const router = useRouter();
 
     // 滚动到指定区域的函数
     const scrollToSection = (sectionId) => {
@@ -32,17 +33,6 @@ export default function Header() {
         { name: '发布房源', id: 'publish-listing' },
         { name: '联系我们', id: 'contact' },
         { name: '打赏', id: 'donation' }
-    ];
-    const handleNavClick = (id) => {
-        if (id === 'datahub') {
-            // 跳转到数据中心页面
-            window.location.href = '/datahub';
-            return;
-        }
-
-        // 原有的滚动逻辑
-        scrollToSection(id);
-        setIsMobileMenuOpen(false); // 关闭移动端菜单
     };
 
     const toggleMobileMenu = () => {
