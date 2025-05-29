@@ -11,7 +11,7 @@ export default function Header() {
 
     // 初始化EmailJS (请替换为您的实际配置)
     useEffect(() => {
-        emailjs.init("YOUR_PUBLIC_KEY"); // 替换为您的EmailJS Public Key
+        emailjs.init("bMngx4pjmTwop4Ivs"); // 替换为您的EmailJS Public Key
     }, []);
 
     // 滚动到指定区域的函数
@@ -34,8 +34,8 @@ export default function Header() {
 
         try {
             await emailjs.send(
-                'YOUR_SERVICE_ID',    // 替换为您的EmailJS Service ID
-                'YOUR_TEMPLATE_ID',   // 替换为您的EmailJS Template ID
+                'service_b9sc71r',    // 替换为您的EmailJS Service ID
+                'template_crgo7cu',   // 替换为您的EmailJS Template ID
                 templateParams
             );
             return true;
@@ -157,11 +157,6 @@ export default function Header() {
                         <div className="contact-label">我们的邮箱：</div>
                         <div className="contact-email">subletmatcher@gmail.com</div>
                     </div>
-                    <div className="modal-buttons">
-                        <button className="btn btn-primary" onClick={closeModal}>
-                            知道了
-                        </button>
-                    </div>
                 </>
             );
         }
@@ -180,11 +175,6 @@ export default function Header() {
                     <div className="contact-info">
                         <div className="contact-label">详细请联系：</div>
                         <div className="contact-email">subletmatcher@gmail.com</div>
-                    </div>
-                    <div className="modal-buttons">
-                        <button className="btn btn-secondary" onClick={closeModal}>
-                            知道了
-                        </button>
                     </div>
                 </>
             );
