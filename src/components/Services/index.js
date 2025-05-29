@@ -78,7 +78,7 @@ export default function Services() {
             <style jsx>{`
                 .services-container {
                     min-height: 100vh;
-                    padding: 60px 20px;
+                    padding: 40px 20px;
                     max-width: 1400px;
                     margin: 0 auto;
                     background: transparent;
@@ -86,30 +86,31 @@ export default function Services() {
 
                 .hero-section {
                     text-align: center;
-                    margin-bottom: 80px;
+                    margin-bottom: 50px;
                 }
 
                 .main-title {
-                    font-size: 56px;
+                    font-size: 42px;
                     font-weight: 300;
                     color: #333;
-                    margin-bottom: 20px;
+                    margin-bottom: 15px;
                     line-height: 1.2;
                 }
 
                 .title-underline {
-                    width: 100px;
-                    height: 4px;
+                    width: 80px;
+                    height: 3px;
                     background: linear-gradient(45deg, #667eea, #764ba2);
-                    margin: 0 auto 40px;
+                    margin: 0 auto 25px;
                 }
 
                 .main-description {
-                    font-size: 20px;
-                    line-height: 1.7;
-                    color: #666;
-                    max-width: 900px;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    color: #2d3748;
+                    max-width: 800px;
                     margin: 0 auto;
+                    font-weight: 500;
                 }
 
                 .services-grid {
@@ -120,62 +121,54 @@ export default function Services() {
                 }
 
                 .service-card {
-                    background: rgba(255, 255, 255, 0.05);
+                    background: rgba(255, 255, 255, 0.15);
                     border-radius: 12px;
-                    padding: 20px 15px;
+                    padding: 25px 18px;
                     text-align: center;
                     transition: all 0.3s ease;
-                    backdrop-filter: blur(10px);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(15px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    cursor: pointer;
                 }
 
                 .service-card:hover {
                     transform: translateY(-8px);
-                    background: rgba(255, 255, 255, 0.1);
+                    background: rgba(255, 255, 255, 0.25);
                     box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
                 }
 
+                .service-card:active {
+                    transform: translateY(-4px);
+                }
+
                 .service-icon {
-                    font-size: 36px;
-                    margin-bottom: 12px;
+                    font-size: 42px;
+                    margin-bottom: 16px;
                     display: block;
                 }
 
                 .service-title {
-                    font-size: 18px;
-                    font-weight: 600;
-                    color: #333;
-                    margin-bottom: 8px;
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: #1a202c;
+                    margin-bottom: 12px;
                     line-height: 1.3;
                 }
 
                 .service-description {
-                    font-size: 13px;
-                    line-height: 1.4;
-                    color: #666;
-                    margin-bottom: 16px;
-                    height: 45px;
+                    font-size: 14px;
+                    line-height: 1.5;
+                    color: #2d3748;
+                    margin-bottom: 0;
+                    font-weight: 500;
+                    min-height: 60px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                 }
 
-                .service-button {
-                    padding: 6px 16px;
-                    font-size: 13px;
-                    font-weight: 600;
-                    border: 2px solid transparent;
-                    border-radius: 5px;
-                    background: linear-gradient(45deg, #667eea, #764ba2);
-                    color: white;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
-
-                .service-button:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
-                }
+                /* 移除了 .service-button 相关样式 */
 
                 .bottom-action {
                     text-align: center;
@@ -188,15 +181,16 @@ export default function Services() {
                 .action-content h2 {
                     font-size: 32px;
                     font-weight: 600;
-                    color: #333;
+                    color: #1a202c;
                     margin-bottom: 16px;
                 }
 
                 .action-content p {
                     font-size: 18px;
-                    color: #666;
+                    color: #2d3748;
                     margin-bottom: 32px;
                     line-height: 1.6;
+                    font-weight: 500;
                 }
 
                 .main-cta-button {
@@ -220,15 +214,15 @@ export default function Services() {
 
                 @media (max-width: 768px) {
                     .services-container {
-                        padding: 40px 15px;
+                        padding: 30px 15px;
                     }
 
                     .main-title {
-                        font-size: 42px;
+                        font-size: 32px;
                     }
 
                     .main-description {
-                        font-size: 18px;
+                        font-size: 15px;
                     }
 
                     .services-grid {
@@ -238,7 +232,7 @@ export default function Services() {
                     }
 
                     .service-card {
-                        padding: 18px 12px;
+                        padding: 22px 15px;
                     }
 
                     .service-description {
