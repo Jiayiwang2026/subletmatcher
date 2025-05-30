@@ -8,7 +8,6 @@ export default function Hero() {
         <section className="hero">
             <h1>智能算法 · 高效找房</h1>
             <p>输入你的需求，我们为你匹配最优短租组合</p>
-            <SearchContainer />
 
             <style jsx>{`
         .hero {
