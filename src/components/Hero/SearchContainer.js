@@ -13,17 +13,6 @@ export default function SearchContainer() {
     const [showResults, setShowResults] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        const today = new Date();
-        const futureDate = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000));
-
-        setFormData(prev => ({
-            ...prev,
-            startDate: today.toISOString().split('T')[0],
-            endDate: futureDate.toISOString().split('T')[0]
-        }));
-    }, []);
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
