@@ -422,7 +422,7 @@ export default function SearchContainer() {
 
                 .search-btn:hover:not(:disabled) {
                     transform: translateY(-2px);
-                    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4));
+                    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
                 }
 
                 .search-btn:disabled {
