@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-export default function DataPage() {
+export default function HomePage() {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
