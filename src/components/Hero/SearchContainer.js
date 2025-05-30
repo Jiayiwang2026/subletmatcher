@@ -1,6 +1,6 @@
 // components/SearchContainer.js
 import { useState, useEffect } from 'react';
-import { realListingsData } from '../data/listing';
+import { realListingsData } from '@/app/data/listing';
 
 export default function SearchContainer() {
     const [formData, setFormData] = useState({
