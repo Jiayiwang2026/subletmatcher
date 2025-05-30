@@ -1,8 +1,8 @@
 'use client';
 
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Home from './components/home'; // 注意文件名大小写
+import Header from '../components/Header/index.js';
+import Hero from '../components/Hero/index.js';
+import Home from '../components/home/index.js';
 
 export default function HomePage() {
     return (
