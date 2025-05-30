@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MapPin, Home, Calendar, User, Phone, ExternalLink, Filter, Search, Star, Heart, Eye } from 'lucide-react';
 
-export default function RentalListingsPage() {
+export default function HomePage() {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -228,13 +227,9 @@ export default function RentalListingsPage() {
                         onClick={() => toggleFavorite(listing.id)}
                         className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200"
                     >
-                        <Heart
-                            className={`w-5 h-5 transition-colors ${
-                                favorites.has(listing.id)
-                                    ? 'text-red-500 fill-red-500'
-                                    : 'text-gray-400 hover:text-red-400'
-                            }`}
-                        />
+                            <span className="text-lg transition-colors">
+                                {favorites.has(listing.id) ? '❤️' : '🤍'}
+                            </span>
                     </button>
                 </div>
 
@@ -248,7 +243,7 @@ export default function RentalListingsPage() {
                 {/* 浏览量 */}
                 <div className="absolute bottom-4 right-4">
                     <span className="bg-white/90 backdrop-blur-sm text-gray-700 px-2 py-1 rounded-lg text-xs flex items-center">
-                        <Eye className="w-3 h-3 mr-1" />
+                        <span className="mr-1">👁️</span>
                         {listing.views}
                     </span>
                 </div>
@@ -262,26 +257,26 @@ export default function RentalListingsPage() {
                         {listing.title}
                     </h3>
                     <div className="flex items-center bg-amber-50 px-2 py-1 rounded-lg">
-                        <Star className="w-4 h-4 text-amber-400 fill-amber-400 mr-1" />
+                        <span className="mr-1">⭐</span>
                         <span className="text-sm font-medium text-amber-700">{listing.rating}</span>
                     </div>
                 </div>
 
                 {/* 位置信息 */}
                 <div className="flex items-center text-gray-600 text-sm mb-4">
-                    <MapPin className="w-4 h-4 mr-2 flex-shrink-0 text-blue-500" />
+                    <span className="mr-2">📍</span>
                     <span className="truncate">{listing.location}</span>
                 </div>
 
                 {/* 价格区域 */}
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center text-gray-600 text-sm">
-                        <Calendar className="w-4 h-4 mr-2 text-green-500" />
+                        <span className="mr-2">📅</span>
                         <span>{listing.rentPeriod}</span>
                     </div>
                     <div className="text-right">
                         <div className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                            {listing.priceText}
+                            {listing.priceText} %
                         </div>
                         {listing.originalPrice && (
                             <div className="text-sm text-gray-400 line-through">
@@ -317,7 +312,7 @@ export default function RentalListingsPage() {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100 mb-4">
                     <div className="flex items-center text-sm text-gray-600">
                         <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-3">
-                            <User className="w-4 h-4 text-white" />
+                            <span className="text-white">👤</span>
                         </div>
                         <div>
                             <div className="font-medium text-gray-800">{listing.contact}</div>
@@ -329,7 +324,7 @@ export default function RentalListingsPage() {
                 {/* 操作按钮 */}
                 <div className="flex gap-3">
                     <button className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white py-3 px-4 rounded-xl transition-all duration-200 font-medium flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105">
-                        <Phone className="w-4 h-4 mr-2" />
+                        <span className="mr-2">📞</span>
                         联系房东
                     </button>
                     {listing.xiaohongshu !== '#' && (
@@ -339,7 +334,7 @@ export default function RentalListingsPage() {
                             rel="noopener noreferrer"
                             className="px-4 py-3 bg-gradient-to-r from-red-50 to-pink-50 hover:from-red-100 hover:to-pink-100 text-red-600 rounded-xl transition-all duration-200 text-sm font-medium flex items-center border border-red-200 hover:border-red-300"
                         >
-                            <ExternalLink className="w-4 h-4 mr-1" />
+                            <span className="mr-1">🔗</span>
                             小红书
                         </a>
                     )}
@@ -410,14 +405,13 @@ export default function RentalListingsPage() {
                     {/* 搜索框 */}
                     <div className="mb-6">
                         <div className="relative max-w-2xl mx-auto">
-                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                            <input
-                                type="text"
-                                placeholder="搜索房源标题、地址或描述关键词..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-6 py-4 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/80 backdrop-blur-sm text-lg placeholder-gray-400 shadow-lg"
-                            />
+                            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>                                <input
+                            type="text"
+                            placeholder="搜索房源标题、地址或描述关键词..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-12 pr-6 py-4 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/80 backdrop-blur-sm text-lg placeholder-gray-400 shadow-lg"
+                        />
                         </div>
                     </div>
 
@@ -425,7 +419,7 @@ export default function RentalListingsPage() {
                     <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
                         <div className="flex items-center space-x-3">
                             <div className="flex items-center space-x-2">
-                                <Filter className="w-5 h-5 text-gray-500" />
+                                <span className="text-gray-500">🔍</span>
                                 <span className="text-sm font-medium text-gray-700">智能筛选</span>
                             </div>
                             <div className="flex flex-wrap gap-2">
@@ -494,7 +488,7 @@ export default function RentalListingsPage() {
                     <div className="text-center">
                         <div className="flex items-center justify-center space-x-2 mb-4">
                             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                <Home className="w-5 h-5 text-white" />
+                                <span className="text-white">🏠</span>
                             </div>
                             <h3 className="text-lg font-bold text-gray-800">西北大学房源中心</h3>
                         </div>
