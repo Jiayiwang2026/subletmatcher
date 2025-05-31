@@ -1,9 +1,9 @@
-// src/components/UploadForm.js
+// src/components/HouseForm.js
 'use client';
 
 import { useState } from 'react';
 
-export default function UploadForm() {
+export default function HouseForm() {
     const [formData, setFormData] = useState({
         title: '',
         startDate: '',

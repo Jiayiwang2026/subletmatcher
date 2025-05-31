@@ -1,13 +1,13 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from 'next/script';
-import UploadForm from '@/components/uploadform';
+import HouseForm from '@/components/HouseForm';
 
 export default function UploadPage() {
     return (
         <div style={{ padding: '40px' }}>
             <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>📤 发布房源</h1>
-            <UploadForm />
+            <HouseForm />
         </div>
     );
 }
