@@ -1,7 +1,7 @@
 // src/app/api/sublets/route.js
 
 import { NextResponse } from 'next/server';
-import { getConnection } from '@/db';
+import { getConnection } from '../../db';
 
 export async function GET() {
     try {
