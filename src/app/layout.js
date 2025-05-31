@@ -1,6 +1,16 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from 'next/script';
+import UploadForm from '@/components/uploadform';
+
+export default function UploadPage() {
+    return (
+        <div style={{ padding: '40px' }}>
+            <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>📤 发布房源</h1>
+            <UploadForm />
+        </div>
+    );
+}
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
