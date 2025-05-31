@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import emailjs from '@emailjs/browser';
+import Link from 'next/link';
 
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -194,28 +195,41 @@ export default function Header() {
 
                     {/* 桌面端导航 */}
                     <nav className="desktop-nav">
-                        {navItems.map((item) => (
-                            <button
-                                key={item.id}
-                                className="nav-item"
-                                onClick={() => handleNavClick(item.id, item.name)}
-                            >
-                                {item.name}
-                            </button>
-                        ))}
+                        {navItems.map((item) =>
+                            item.id === 'publish-listing' ? (
+                                <Link key={item.id} href="/upload">
+                                    <button className="nav-item">{item.name}</button>
+                                </Link>
+                            ) : (
+                                <button
+                                    key={item.id}
+                                    className="nav-item"
+                                    onClick={() => handleNavClick(item.id, item.name)}
+                                >
+                                    {item.name}
+                                </button>
+                            )
+                        )}
                     </nav>
 
                     {/* 移动端菜单按钮 */}
-                    <button
-                        className="mobile-menu-button"
-                        onClick={toggleMobileMenu}
-                    >
-                        <span className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </span>
-                    </button>
+                    <div className={`mobile-nav ${isMobileMenuOpen ? 'open' : ''}`}>
+                        {navItems.map((item) =>
+                            item.id === 'publish-listing' ? (
+                                <Link key={item.id} href="/upload">
+                                    <button className="mobile-nav-item">{item.name}</button>
+                                </Link>
+                            ) : (
+                                <button
+                                    key={item.id}
+                                    className="mobile-nav-item"
+                                    onClick={() => handleNavClick(item.id, item.name)}
+                                >
+                                    {item.name}
+                                </button>
+                            )
+                        )}
+                    </div>
                 </div>
 
                 {/* 移动端导航菜单 */}
