@@ -1,7 +1,8 @@
-// components/Contact.js
+'use client';
 import { useState } from 'react';
 import axios from 'axios';
 
+export default function Contact() {
     const [publishForm, setPublishForm] = useState({
         start_date: '',
         end_date: '',
@@ -48,7 +49,6 @@ import axios from 'axios';
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            // Convert string values to appropriate types
             const formData = {
                 ...publishForm,
                 monthly_rent: Number(publishForm.monthly_rent)
