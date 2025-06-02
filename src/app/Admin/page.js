@@ -1,5 +1,5 @@
 // src/app/admin/route.js
-'use client';
+'use client'
 import { useEffect, useState } from 'react';
 // 示例：在 AdminPage 最上面加
 const [authorized, setAuthorized] = useState(false);

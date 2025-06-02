@@ -1,8 +1,7 @@
-// components/Contact.js - 集成 EmailJS 邮件发送功能
+// components/Contact.js
 import { useState } from 'react';
-import emailjs from '@emailjs/browser';
+import axios from 'axios';
 
-export default function Contact() {
     const [publishForm, setPublishForm] = useState({
         start_date: '',
         end_date: '',
@@ -19,6 +18,8 @@ export default function Contact() {
         email_address: ''
     });
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [contactForm, setContactForm] = useState({
         name: '',
         wechat: '',
@@ -28,19 +29,6 @@ export default function Contact() {
         roomtype: '',
         notes: ''
     });
-
-    const [isSubmitting, setIsSubmitting] = useState({
-        publish: false,
-        contact: false
-    });
-
-    // EmailJS 配置 - 需要你提供邮箱地址后设置
-    const EMAILJS_CONFIG = {
-        SERVICE_ID: 'service_b9sc71r',  // 需要在 EmailJS 中设置
-        TEMPLATE_ID_PUBLISH: 'template_tcyhlug',  // 房源发布模板
-        TEMPLATE_ID_CONTACT: 'template_crgo7cu',  // 联系需求模板
-        PUBLIC_KEY: 'bMngx4pjmTwop4Ivs'  // EmailJS 公钥
-    };
 
     const handlePublishChange = (e) => {
         setPublishForm(prev => ({
@@ -56,110 +44,20 @@ export default function Contact() {
         }));
     };
 
-    const sendPublishEmail = async (formData) => {
-        // 构建邮件模板参数
-        const templateParams = {
-            to_email: 'subletmatcher@gmail.com',  // 替换为你的邮箱
-            from_name: formData.contact_name,
-            subject: '新房源发布 - ' + formData.room_type + ' - $' + formData.monthly_rent,
-
-            // 房源基本信息
-            start_date: formData.start_date,
-            end_date: formData.end_date,
-            room_type: formData.room_type,
-            private_bathroom: formData.private_bathroom === 'yes' ? '有独立厕所' : '共用厕所',
-            roommates_count: formData.roommates_count || '未提供',
-            monthly_rent: formData.monthly_rent,
-            walking_distance: formData.walking_distance || '未提供',
-            location: formData.location || '未提供',
-            property_description: formData.property_description,
-
-            // 联系信息
-            contact_name: formData.contact_name,
-            wechat_id: formData.wechat_id,
-            phone_number: formData.phone_number || '未提供',
-            email_address: formData.email_address || '未提供',
-
-            // 时间戳
-            submit_time: new Date().toLocaleString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            })
-        };
-
-        try {
-            await emailjs.send(
-                EMAILJS_CONFIG.SERVICE_ID,
-                EMAILJS_CONFIG.TEMPLATE_ID_PUBLISH,
-                templateParams,
-                EMAILJS_CONFIG.PUBLIC_KEY
-            );
-            return { success: true };
-        } catch (error) {
-            console.error('邮件发送失败:', error);
-            return {
-                success: false,
-                error: error.text || error.message || '邮件服务异常'
-            };
-        }
-    };
-
-    const sendContactEmail = async (formData) => {
-        const templateParams = {
-            to_email: 'subletmatcher@gamil.com',  // 替换为你的邮箱
-            from_name: formData.name,
-            subject: '新用户找房需求 - ' + formData.name,
-
-            // 用户信息
-            name: formData.name,
-            wechat: formData.wechat,
-            checkin: formData.checkin,
-            checkout: formData.checkout,
-            price: formData.price || '未设定',
-            roomtype: formData.roomtype || '无特定要求',
-            notes: formData.notes || '无特殊备注',
-
-            // 时间戳
-            submit_time: new Date().toLocaleString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            })
-        };
-
-        try {
-            await emailjs.send(
-                EMAILJS_CONFIG.SERVICE_ID,
-                EMAILJS_CONFIG.TEMPLATE_ID_CONTACT,
-                templateParams,
-                EMAILJS_CONFIG.PUBLIC_KEY
-            );
-            return { success: true };
-        } catch (error) {
-            console.error('邮件发送失败:', error);
-            return {
-                success: false,
-                error: error.text || error.message || '邮件服务异常'
-            };
-        }
-    };
-
     const handlePublishSubmit = async (e) => {
         e.preventDefault();
-        setIsSubmitting(prev => ({ ...prev, publish: true }));
-
+        setIsSubmitting(true);
         try {
-            // 发送邮件
-            const emailResult = await sendPublishEmail(publishForm);
+            // Convert string values to appropriate types
+            const formData = {
+                ...publishForm,
+                monthly_rent: Number(publishForm.monthly_rent)
+            };
 
-            if (emailResult.success) {
-                alert('✅ 房源信息提交成功！我们已收到您的信息，会尽快审核并联系您。');
-                // 清空表单
+            const response = await axios.post('http://localhost:5000/api/listings', formData);
+            
+            if (response.status === 201) {
+                alert('✅ 房源信息提交成功！我们会尽快审核并联系您。');
                 setPublishForm({
                     start_date: '',
                     end_date: '',
@@ -175,56 +73,38 @@ export default function Contact() {
                     phone_number: '',
                     email_address: ''
                 });
-            } else {
-                const errorMessage = emailResult.error || emailResult.message || '未知错误';
-                alert('❌ 提交失败，请稍后重试或直接联系我们。错误信息：' + errorMessage);
             }
         } catch (error) {
-            console.error('提交失败:', error);
-            const errorMessage = error.message || error.text || '网络连接异常';
-            alert('❌ 网络错误，请检查网络连接后重试。错误详情：' + errorMessage);
+            console.error('Error submitting listing:', error);
+            let errorMessage = '提交失败，请稍后重试。';
+            if (error.response?.data?.error) {
+                errorMessage += '\n错误信息: ' + error.response.data.error;
+            } else if (error.message === 'Network Error') {
+                errorMessage += '\n网络连接错误，请检查网络连接。';
+            }
+            alert(errorMessage);
         } finally {
-            setIsSubmitting(prev => ({ ...prev, publish: false }));
+            setIsSubmitting(false);
         }
     };
 
-    const handleContactSubmit = async (e) => {
+    const handleContactSubmit = (e) => {
         e.preventDefault();
-        setIsSubmitting(prev => ({ ...prev, contact: true }));
-
-        try {
-            // 发送邮件
-            const emailResult = await sendContactEmail(contactForm);
-
-            if (emailResult.success) {
-                alert('✅ 提交成功！我们已收到您的找房需求，会尽快联系您。\n\n' +
-                    '您的信息：\n' +
-                    '姓名：' + contactForm.name + '\n' +
-                    '微信：' + contactForm.wechat + '\n' +
-                    '入住时间：' + contactForm.checkin + '\n' +
-                    '退房时间：' + contactForm.checkout);
-
-                // 清空表单
-                setContactForm({
-                    name: '',
-                    wechat: '',
-                    checkin: '',
-                    checkout: '',
-                    price: '',
-                    roomtype: '',
-                    notes: ''
-                });
-            } else {
-                const errorMessage = emailResult.error || emailResult.message || '未知错误';
-                alert('❌ 提交失败，请稍后重试或直接联系我们。错误信息：' + errorMessage);
-            }
-        } catch (error) {
-            console.error('提交失败:', error);
-            const errorMessage = error.message || error.text || '网络连接异常';
-            alert('❌ 网络错误，请检查网络连接后重试。错误详情：' + errorMessage);
-        } finally {
-            setIsSubmitting(prev => ({ ...prev, contact: false }));
-        }
+        alert('✅ 提交成功！我们会尽快联系您。\n\n' +
+            '您的信息：\n' +
+            '姓名：' + contactForm.name + '\n' +
+            '微信：' + contactForm.wechat + '\n' +
+            '入住时间：' + contactForm.checkin + '\n' +
+            '退房时间：' + contactForm.checkout);
+        setContactForm({
+            name: '',
+            wechat: '',
+            checkin: '',
+            checkout: '',
+            price: '',
+            roomtype: '',
+            notes: ''
+        });
     };
 
     return (
@@ -452,13 +332,7 @@ export default function Contact() {
                             </p>
                         </div>
 
-                        <button
-                            type="submit"
-                            className="submit-btn"
-                            disabled={isSubmitting.publish}
-                        >
-                            {isSubmitting.publish ? '⏳ 提交中...' : '🚀 发布房源'}
-                        </button>
+                        <button type="submit" className="submit-btn">🚀 发布房源</button>
                     </form>
                 </div>
             </section>
@@ -552,197 +426,185 @@ export default function Contact() {
                             value={contactForm.notes}
                             onChange={handleContactChange}
                         />
-                        <button
-                            type="submit"
-                            className="submit-btn"
-                            disabled={isSubmitting.contact}
-                        >
-                            {isSubmitting.contact ? '⏳ 提交中...' : '🚀 提交需求'}
-                        </button>
+                        <button type="submit" className="submit-btn">🚀 提交需求</button>
                     </form>
                 </div>
             </section>
 
             <style jsx>{`
-                .contact-section {
-                    background: rgba(255, 255, 255, 0.1);
-                    backdrop-filter: blur(20px);
-                    padding: 80px 20px;
-                    margin-top: 60px;
-                }
+        .contact-section {
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(20px);
+          padding: 80px 20px;
+          margin-top: 60px;
+        }
 
-                .contact-title {
-                    text-align: center;
-                    font-size: 32px;
-                    font-weight: 700;
-                    color: white;
-                    margin-bottom: 40px;
-                    line-height: 1.4;
-                }
+        .contact-title {
+          text-align: center;
+          font-size: 32px;
+          font-weight: 700;
+          color: white;
+          margin-bottom: 40px;
+          line-height: 1.4;
+        }
 
-                .section-subtitle {
-                    text-align: center;
-                    color: white;
-                    margin-bottom: 40px;
-                    font-size: 18px;
-                }
+        .section-subtitle {
+          text-align: center;
+          color: white;
+          margin-bottom: 40px;
+          font-size: 18px;
+        }
 
-                .form-container {
-                    background: rgba(255, 255, 255, 0.95);
-                    border-radius: 20px;
-                    max-width: 600px;
-                    margin: 0 auto;
-                    padding: 40px;
-                    backdrop-filter: blur(20px);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                }
+        .form-container {
+          background: rgba(255, 255, 255, 0.95);
+          border-radius: 20px;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 40px;
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
 
-                .form-section {
-                    margin-bottom: 30px;
-                }
+        .form-section {
+          margin-bottom: 30px;
+        }
 
-                .form-section-title {
-                    font-size: 18px;
-                    font-weight: 700;
-                    color: #333;
-                    margin-bottom: 20px;
-                    padding-bottom: 10px;
-                    border-bottom: 2px solid #f0f0f0;
-                }
+        .form-section-title {
+          font-size: 18px;
+          font-weight: 700;
+          color: #333;
+          margin-bottom: 20px;
+          padding-bottom: 10px;
+          border-bottom: 2px solid #f0f0f0;
+        }
 
-                .form-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                    gap: 20px;
-                    margin-bottom: 20px;
-                }
+        .form-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          margin-bottom: 20px;
+        }
 
-                .form-field {
-                    display: flex;
-                    flex-direction: column;
-                }
+        .form-field {
+          display: flex;
+          flex-direction: column;
+        }
 
-                .form-label {
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: #555;
-                    margin-bottom: 8px;
-                }
+        .form-label {
+          font-size: 14px;
+          font-weight: 600;
+          color: #555;
+          margin-bottom: 8px;
+        }
 
-                .form-input {
-                    width: 100%;
-                    padding: 15px 20px;
-                    border: 1px solid #ddd;
-                    border-radius: 12px;
-                    font-size: 16px;
-                    transition: all 0.3s ease;
-                    background: white;
-                }
+        .form-input {
+          width: 100%;
+          padding: 15px 20px;
+          border: 1px solid #ddd;
+          border-radius: 12px;
+          font-size: 16px;
+          transition: all 0.3s ease;
+          background: white;
+        }
 
-                .form-input:focus {
-                    outline: none;
-                    border-color: #667eea;
-                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-                }
+        .form-input:focus {
+          outline: none;
+          border-color: #667eea;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
 
-                .form-textarea {
-                    width: 100%;
-                    padding: 15px 20px;
-                    border: 1px solid #ddd;
-                    border-radius: 12px;
-                    font-size: 16px;
-                    resize: vertical;
-                    min-height: 120px;
-                    font-family: inherit;
-                    margin-bottom: 20px;
-                }
+        .form-textarea {
+          width: 100%;
+          padding: 15px 20px;
+          border: 1px solid #ddd;
+          border-radius: 12px;
+          font-size: 16px;
+          resize: vertical;
+          min-height: 120px;
+          font-family: inherit;
+          margin-bottom: 20px;
+        }
 
-                .form-textarea:focus {
-                    outline: none;
-                    border-color: #667eea;
-                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-                }
+        .form-textarea:focus {
+          outline: none;
+          border-color: #667eea;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
 
-                .form-disclaimer {
-                    margin-bottom: 20px;
-                }
+        .form-disclaimer {
+          margin-bottom: 20px;
+        }
 
-                .form-disclaimer p {
-                    color: #666;
-                    font-size: 14px;
-                    line-height: 1.5;
-                    margin-bottom: 20px;
-                }
+        .form-disclaimer p {
+          color: #666;
+          font-size: 14px;
+          line-height: 1.5;
+          margin-bottom: 20px;
+        }
 
-                .submit-btn {
-                    width: 100%;
-                    padding: 15px 30px;
-                    border: none;
-                    border-radius: 12px;
-                    background: linear-gradient(45deg, #667eea, #764ba2);
-                    color: white;
-                    font-size: 18px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
+        .submit-btn {
+          width: 100%;
+          padding: 15px 30px;
+          border: none;
+          border-radius: 12px;
+          background: linear-gradient(45deg, #667eea, #764ba2);
+          color: white;
+          font-size: 18px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
 
-                .submit-btn:hover:not(:disabled) {
-                    transform: translateY(-2px);
-                    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
-                }
+        .submit-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
 
-                .submit-btn:disabled {
-                    opacity: 0.7;
-                    cursor: not-allowed;
-                    background: #ccc;
-                }
+        .news-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 30px;
+          max-width: 1000px;
+          margin: 0 auto;
+        }
 
-                .news-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                    gap: 30px;
-                    max-width: 1000px;
-                    margin: 0 auto;
-                }
+        .news-card {
+          background: rgba(255, 255, 255, 0.95);
+          border-radius: 15px;
+          padding: 30px;
+          transition: all 0.3s ease;
+        }
 
-                .news-card {
-                    background: rgba(255, 255, 255, 0.95);
-                    border-radius: 15px;
-                    padding: 30px;
-                    transition: all 0.3s ease;
-                }
+        .news-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
 
-                .news-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-                }
+        .news-card h3 {
+          font-size: 20px;
+          font-weight: 700;
+          margin-bottom: 15px;
+          color: #333;
+        }
 
-                .news-card h3 {
-                    font-size: 20px;
-                    font-weight: 700;
-                    margin-bottom: 15px;
-                    color: #333;
-                }
+        .news-card p {
+          color: #666;
+          line-height: 1.6;
+          margin-bottom: 20px;
+        }
 
-                .news-card p {
-                    color: #666;
-                    line-height: 1.6;
-                    margin-bottom: 20px;
-                }
+        .news-link {
+          color: #667eea;
+          text-decoration: none;
+          font-weight: 600;
+          transition: all 0.3s ease;
+        }
 
-                .news-link {
-                    color: #667eea;
-                    text-decoration: none;
-                    font-weight: 600;
-                    transition: all 0.3s ease;
-                }
-
-                .news-link:hover {
-                    color: #764ba2;
-                    text-decoration: underline;
-                }
-            `}</style>
+        .news-link:hover {
+          color: #764ba2;
+          text-decoration: underline;
+        }
+      `}</style>
         </>
     );
 }
