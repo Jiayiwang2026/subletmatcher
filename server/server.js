@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-const MONGODB_URI = 'mongodb+srv://jiayiwang2026:<Wjy20031211>@subletmatcher.6a4spgf.mongodb.net/';
+const MONGODB_URI = 'mongodb+srv://jiayiwang2026:<db_password>@subletmatcher.6a4spgf.mongodb.net/';
 
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
@@ -64,4 +64,4 @@ app.get('/health', (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});
+}); 
