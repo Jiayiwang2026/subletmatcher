@@ -1,6 +1,5 @@
 // components/SearchContainer.js
-import { useState, useEffect } from 'react';
-import { realListingsData } from '@/app/data/listing';
+import { useState } from 'react';
 
 export default function SearchContainer() {
     const [formData, setFormData] = useState({
@@ -12,6 +11,7 @@ export default function SearchContainer() {
     const [results, setResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -21,19 +21,17 @@ export default function SearchContainer() {
         }));
     };
 
-    // 修复日历点击问题
+    // Fix calendar click issue
     const openDatePicker = (type) => {
         const pickerId = `${type}-date-picker`;
         const picker = document.getElementById(pickerId);
         if (picker) {
-            // 尝试多种方法打开日期选择器
             try {
                 if (picker.showPicker) {
                     picker.showPicker();
                 } else {
                     picker.focus();
                     picker.click();
-                    // 触发点击事件
                     const event = new MouseEvent('click', {
                         view: window,
                         bubbles: true,
@@ -42,66 +40,58 @@ export default function SearchContainer() {
                     picker.dispatchEvent(event);
                 }
             } catch (error) {
-                // 如果上面的方法都失败，尝试直接聚焦
                 picker.focus();
             }
         }
     };
 
-    const matchResults = () => {
+    const matchResults = async () => {
         setIsLoading(true);
+        setError(null);
 
-        setTimeout(() => {
-            const startDate = new Date(formData.startDate);
-            const endDate = new Date(formData.endDate);
-            const budget = parseInt(formData.budget) || Infinity;
-
+        try {
             if (!formData.startDate || !formData.endDate) {
+                setError('Please select check-in and check-out dates');
                 setResults([]);
                 setShowResults(true);
-                setIsLoading(false);
                 return;
             }
 
-            const matched = realListingsData.map(item => {
-                const listingStart = new Date(item.转租开始时间);
-                const listingEnd = new Date(item.转租结束时间);
+            const response = await fetch('/api/listings/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
 
-                const overlapStart = Math.max(startDate, listingStart);
-                const overlapEnd = Math.min(endDate, listingEnd);
-                const overlapDays = Math.max(0, (overlapEnd - overlapStart) / (1000 * 60 * 60 * 24));
+            if (!response.ok) {
+                throw new Error('Search failed, please try again later');
+            }
 
-                const totalDaysNeeded = (endDate - startDate) / (1000 * 60 * 60 * 24);
-                const timeScore = overlapDays / totalDaysNeeded * 100;
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
 
-                const priceScore = item.价格 <= budget ? 100 - (item.价格 / budget * 50) : 0;
-                const roomTypeScore = !formData.roomType || item.房型 === formData.roomType ? 100 : 50;
-
-                const totalScore = (timeScore * 0.5 + priceScore * 0.3 + roomTypeScore * 0.2);
-
-                return {
-                    ...item,
-                    score: totalScore,
-                    overlapDays: overlapDays,
-                    coveragePercent: Math.round(timeScore)
-                };
-            })
-                .filter(item => item.overlapDays > 0 && item.价格 <= budget * 1.2)
-                .sort((a, b) => b.score - a.score);
-
-            setResults(matched);
+            setResults(data);
             setShowResults(true);
+        } catch (err) {
+            setError(err.message);
+            setResults([]);
+        } finally {
             setIsLoading(false);
-        }, 500);
+        }
     };
 
     const handleViewDetails = (href, contact) => {
         if (href && href !== '#') {
             window.open(href, '_blank');
         } else if (contact) {
-            alert(`联系方式：${contact}`);
+            alert(`Contact: ${contact}`);
         } else {
-            alert('请通过下方表单联系我们获取更多信息');
+            alert('Please contact us through the form below for more information');
         }
     };
 
@@ -132,7 +122,7 @@ export default function SearchContainer() {
                     >
                         📅
                     </button>
-                    <label className="date-label">入住开始日期</label>
+                    <label className="date-label">Check-in Date</label>
                 </div>
 
                 <div className="input-group date-input-group">
@@ -159,7 +149,7 @@ export default function SearchContainer() {
                     >
                         📅
                     </button>
-                    <label className="date-label">入住结束日期</label>
+                    <label className="date-label">Check-out Date</label>
                 </div>
 
                 <div className="input-group">
@@ -168,7 +158,7 @@ export default function SearchContainer() {
                         value={formData.roomType}
                         onChange={handleInputChange}
                     >
-                        <option value="">选择房型</option>
+                        <option value="">Select Room Type</option>
                         <option value="studio">Studio</option>
                         <option value="1b1b">1B1B</option>
                         <option value="1.5b1b">1.5B1B</option>
@@ -184,65 +174,71 @@ export default function SearchContainer() {
                         name="budget"
                         value={formData.budget}
                         onChange={handleInputChange}
-                        placeholder="预算 (USD/月)"
+                        placeholder="Budget (USD/month)"
                     />
                 </div>
             </div>
+
+            {error && (
+                <div className="error-message bg-red-100 text-red-700 p-3 rounded-md mt-4">
+                    {error}
+                </div>
+            )}
 
             <button
                 className="search-btn"
                 onClick={matchResults}
                 disabled={isLoading}
             >
-                {isLoading ? '⏳ 搜索中...' : '🔍 智能匹配房源'}
+                {isLoading ? '⏳ Searching...' : '🔍 Smart Match'}
             </button>
 
             {showResults && (
                 <div className={`results-container ${showResults ? 'show' : ''}`}>
                     {results.length === 0 ? (
                         <div className="no-results">
-                            <h3>🔍 未找到完全匹配的房源</h3>
-                            <p>共搜索了 {realListingsData.length} 条房源数据</p>
-                            <p>建议调整搜索条件或联系我们为您定制寻找</p>
+                            <h3>🔍 No Matching Listings Found</h3>
+                            <p>Searched through {results.length} listings</p>
+                            <p>Try adjusting your search criteria or contact us for custom assistance</p>
                         </div>
                     ) : (
                         <>
                             <div className="results-header">
-                                <h3>找到 {results.length} 条匹配房源 (共 {realListingsData.length} 条数据)</h3>
+                                <h3>Found {results.length} matching listings</h3>
                             </div>
                             <div className="results-grid">
                                 {results.map((item, index) => (
                                     <div key={index} className="listing-card">
-                                        <div className="match-score">{Math.round(item.score)}% 匹配</div>
+                                        <div className="match-score">{Math.round(item.score)}% Match</div>
                                         <h4 className="listing-title">{item.title}</h4>
                                         <div className="listing-details">
                                             <div className="detail-row">
-                                                <span className="detail-label">📅 可租时间:</span>
+                                                <span className="detail-label">📅 Available:</span>
                                                 <span>{item.转租开始时间} ~ {item.转租结束时间}</span>
                                             </div>
                                             <div className="detail-row">
-                                                <span className="detail-label">🏠 房型:</span>
+                                                <span className="detail-label">🏠 Type:</span>
                                                 <span>{item.房型.toUpperCase()}</span>
                                             </div>
                                             <div className="detail-row">
-                                                <span className="detail-label">📍 地址:</span>
-                                                <span>{item.地址 || '详情请咨询'}</span>
+                                                <span className="detail-label">📍 Location:</span>
+                                                <span>{item.地址 || 'Contact for details'}</span>
                                             </div>
                                             <div className="detail-row">
-                                                <span className="detail-label">✨ 特色:</span>
-                                                <span>{item.特色}</span>
+                                                <span className="detail-label">✨ Features:</span>
+                                                <span>{item.特色 || 'Contact for details'}</span>
                                             </div>
                                             <div className="detail-row">
-                                                <span className="detail-label">💰 价格:</span>
-                                                <span className="price">${item.价格}/月</span>
+                                                <span className="detail-label">💰 Price:</span>
+                                                <span className="price">${item.价格}/month</span>
                                             </div>
                                             <div className="detail-row">
-                                                <span className="detail-label">⏰ 时间覆盖:</span>
+                                                <span className="detail-label">⏰ Time Match:</span>
                                                 <span>{item.coveragePercent}%</span>
                                             </div>
                                             {item.联系方式 && (
                                                 <div className="detail-row">
-                                                    <span className="detail-label">📱 联系方式:</span>
+                                                    <span className="detail-label">📱 Contact:</span>
                                                     <span>{item.联系方式}</span>
                                                 </div>
                                             )}
@@ -251,7 +247,7 @@ export default function SearchContainer() {
                                             className="view-btn"
                                             onClick={() => handleViewDetails(item.href, item.联系方式)}
                                         >
-                                            查看详情 →
+                                            View Details →
                                         </button>
                                     </div>
                                 ))}

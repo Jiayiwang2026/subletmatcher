@@ -57,7 +57,7 @@ export default function Contact() {
             const response = await axios.post('http://localhost:5000/api/listings', formData);
             
             if (response.status === 201) {
-                alert('✅ 房源信息提交成功！我们会尽快审核并联系您。');
+                alert('✅ Listing submitted successfully! We will review and contact you soon.');
                 setPublishForm({
                     start_date: '',
                     end_date: '',
@@ -76,11 +76,11 @@ export default function Contact() {
             }
         } catch (error) {
             console.error('Error submitting listing:', error);
-            let errorMessage = '提交失败，请稍后重试。';
+            let errorMessage = 'Submission failed, please try again later.';
             if (error.response?.data?.error) {
-                errorMessage += '\n错误信息: ' + error.response.data.error;
+                errorMessage += '\nError: ' + error.response.data.error;
             } else if (error.message === 'Network Error') {
-                errorMessage += '\n网络连接错误，请检查网络连接。';
+                errorMessage += '\nNetwork connection error, please check your internet connection.';
             }
             alert(errorMessage);
         } finally {
@@ -90,12 +90,12 @@ export default function Contact() {
 
     const handleContactSubmit = (e) => {
         e.preventDefault();
-        alert('✅ 提交成功！我们会尽快联系您。\n\n' +
-            '您的信息：\n' +
-            '姓名：' + contactForm.name + '\n' +
-            '微信：' + contactForm.wechat + '\n' +
-            '入住时间：' + contactForm.checkin + '\n' +
-            '退房时间：' + contactForm.checkout);
+        alert('✅ Submitted successfully! We will contact you soon.\n\n' +
+            'Your Information:\n' +
+            'Name: ' + contactForm.name + '\n' +
+            'WeChat: ' + contactForm.wechat + '\n' +
+            'Check-in: ' + contactForm.checkin + '\n' +
+            'Check-out: ' + contactForm.checkout);
         setContactForm({
             name: '',
             wechat: '',
@@ -111,17 +111,17 @@ export default function Contact() {
         <>
             {/* Publish Section */}
             <section className="contact-section" id="publish">
-                <h2 className="contact-title">🏠 发布您的房源信息</h2>
+                <h2 className="contact-title">🏠 Post Your Listing</h2>
                 <p className="section-subtitle">
-                    有房源要转租？快速发布，让更多人看到！
+                    Have a place to sublet? Post it quickly and reach more people!
                 </p>
                 <div className="form-container">
                     <form onSubmit={handlePublishSubmit}>
                         <div className="form-section">
-                            <h3 className="form-section-title">📅 租期信息</h3>
+                            <h3 className="form-section-title">📅 Lease Period</h3>
                             <div className="form-grid">
                                 <div className="form-field">
-                                    <label htmlFor="pub-start-date" className="form-label">转租开始时间 *</label>
+                                    <label htmlFor="pub-start-date" className="form-label">Start Date *</label>
                                     <input
                                         type="date"
                                         name="start_date"
@@ -133,7 +133,7 @@ export default function Contact() {
                                     />
                                 </div>
                                 <div className="form-field">
-                                    <label htmlFor="pub-end-date" className="form-label">转租结束时间 *</label>
+                                    <label htmlFor="pub-end-date" className="form-label">End Date *</label>
                                     <input
                                         type="date"
                                         name="end_date"
@@ -148,10 +148,10 @@ export default function Contact() {
                         </div>
 
                         <div className="form-section">
-                            <h3 className="form-section-title">🏠 房源详情</h3>
+                            <h3 className="form-section-title">🏠 Property Details</h3>
                             <div className="form-grid">
                                 <div className="form-field">
-                                    <label htmlFor="pub-room-type" className="form-label">房型 *</label>
+                                    <label htmlFor="pub-room-type" className="form-label">Room Type *</label>
                                     <select
                                         name="room_type"
                                         id="pub-room-type"
@@ -160,7 +160,7 @@ export default function Contact() {
                                         value={publishForm.room_type}
                                         onChange={handlePublishChange}
                                     >
-                                        <option value="">请选择房型</option>
+                                        <option value="">Select Room Type</option>
                                         <option value="studio">Studio</option>
                                         <option value="1b1b">1B1B</option>
                                         <option value="1.5b1b">1.5B1B</option>
@@ -168,11 +168,11 @@ export default function Contact() {
                                         <option value="2b2b">2B2B</option>
                                         <option value="3b2b">3B2B</option>
                                         <option value="4b2b">4B2B</option>
-                                        <option value="other">其他</option>
+                                        <option value="other">Other</option>
                                     </select>
                                 </div>
                                 <div className="form-field">
-                                    <label htmlFor="pub-private-bath" className="form-label">是否有独立厕所 *</label>
+                                    <label htmlFor="pub-private-bath" className="form-label">Private Bathroom *</label>
                                     <select
                                         name="private_bathroom"
                                         id="pub-private-bath"
@@ -181,13 +181,13 @@ export default function Contact() {
                                         value={publishForm.private_bathroom}
                                         onChange={handlePublishChange}
                                     >
-                                        <option value="">请选择</option>
-                                        <option value="yes">有独立厕所</option>
-                                        <option value="no">共用厕所</option>
+                                        <option value="">Select</option>
+                                        <option value="yes">Private Bathroom</option>
+                                        <option value="no">Shared Bathroom</option>
                                     </select>
                                 </div>
                                 <div className="form-field">
-                                    <label htmlFor="pub-roommates" className="form-label">有几个室友</label>
+                                    <label htmlFor="pub-roommates" className="form-label">Number of Roommates</label>
                                     <select
                                         name="roommates_count"
                                         id="pub-roommates"
@@ -195,90 +195,74 @@ export default function Contact() {
                                         value={publishForm.roommates_count}
                                         onChange={handlePublishChange}
                                     >
-                                        <option value="">请选择</option>
-                                        <option value="0">没有室友（整租）</option>
-                                        <option value="1">1个室友</option>
-                                        <option value="2">2个室友</option>
-                                        <option value="3">3个室友</option>
-                                        <option value="4">4个室友</option>
-                                        <option value="5+">5个或以上</option>
+                                        <option value="">Select</option>
+                                        <option value="0">No Roommates (Entire Unit)</option>
+                                        <option value="1">1 Roommate</option>
+                                        <option value="2">2 Roommates</option>
+                                        <option value="3">3 Roommates</option>
+                                        <option value="4+">4+ Roommates</option>
                                     </select>
                                 </div>
                                 <div className="form-field">
-                                    <label htmlFor="pub-price" className="form-label">月租价格 (USD) *</label>
+                                    <label htmlFor="pub-rent" className="form-label">Monthly Rent (USD) *</label>
                                     <input
                                         type="number"
                                         name="monthly_rent"
-                                        id="pub-price"
-                                        placeholder="例如: 1200"
+                                        id="pub-rent"
                                         required
-                                        className="form-input"
                                         min="0"
+                                        className="form-input"
                                         value={publishForm.monthly_rent}
                                         onChange={handlePublishChange}
+                                        placeholder="e.g., 1200"
                                     />
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="form-section">
-                            <h3 className="form-section-title">📍 位置信息</h3>
-                            <div className="form-grid">
                                 <div className="form-field">
-                                    <label htmlFor="pub-walking-distance" className="form-label">距离学校步行时间</label>
-                                    <select
+                                    <label htmlFor="pub-distance" className="form-label">Walking Distance to Campus (min)</label>
+                                    <input
+                                        type="number"
                                         name="walking_distance"
-                                        id="pub-walking-distance"
+                                        id="pub-distance"
+                                        min="0"
                                         className="form-input"
                                         value={publishForm.walking_distance}
                                         onChange={handlePublishChange}
-                                    >
-                                        <option value="">请选择</option>
-                                        <option value="0-5min">0-5分钟</option>
-                                        <option value="5-10min">5-10分钟</option>
-                                        <option value="10-15min">10-15分钟</option>
-                                        <option value="15-20min">15-20分钟</option>
-                                        <option value="20-30min">20-30分钟</option>
-                                        <option value="30min+">30分钟以上</option>
-                                    </select>
+                                        placeholder="e.g., 15"
+                                    />
                                 </div>
-                                <div className="form-field">
-                                    <label htmlFor="pub-address" className="form-label">大概地址/社区</label>
+                                <div className="form-field full-width">
+                                    <label htmlFor="pub-location" className="form-label">Address *</label>
                                     <input
                                         type="text"
                                         name="location"
-                                        id="pub-address"
-                                        placeholder="例如: Evanston, Lincoln Park"
+                                        id="pub-location"
+                                        required
                                         className="form-input"
                                         value={publishForm.location}
                                         onChange={handlePublishChange}
+                                        placeholder="e.g., 1234 Sherman Ave, Evanston, IL"
                                     />
+                                </div>
+                                <div className="form-field full-width">
+                                    <label htmlFor="pub-description" className="form-label">Property Description</label>
+                                    <textarea
+                                        name="property_description"
+                                        id="pub-description"
+                                        className="form-input"
+                                        rows="4"
+                                        value={publishForm.property_description}
+                                        onChange={handlePublishChange}
+                                        placeholder="Describe your property, amenities, and any special features..."
+                                    ></textarea>
                                 </div>
                             </div>
                         </div>
 
                         <div className="form-section">
-                            <h3 className="form-section-title">📝 房源描述</h3>
-                            <div className="form-field">
-                                <label htmlFor="pub-description" className="form-label">简短介绍一下你的房源 *</label>
-                                <textarea
-                                    name="property_description"
-                                    id="pub-description"
-                                    rows="5"
-                                    placeholder="请描述房源的特色、设施、周边环境等，例如：&#10;- 房间朝南采光好&#10;- 家具齐全，拎包入住&#10;- 楼下有健身房和洗衣房&#10;- 附近有超市和餐厅"
-                                    required
-                                    className="form-textarea"
-                                    value={publishForm.property_description}
-                                    onChange={handlePublishChange}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-section">
-                            <h3 className="form-section-title">📞 联系方式</h3>
+                            <h3 className="form-section-title">📞 Contact Information</h3>
                             <div className="form-grid">
                                 <div className="form-field">
-                                    <label htmlFor="pub-name" className="form-label">您的姓名 *</label>
+                                    <label htmlFor="pub-name" className="form-label">Name *</label>
                                     <input
                                         type="text"
                                         name="contact_name"
@@ -290,19 +274,18 @@ export default function Contact() {
                                     />
                                 </div>
                                 <div className="form-field">
-                                    <label htmlFor="pub-wechat" className="form-label">微信号 *</label>
+                                    <label htmlFor="pub-wechat" className="form-label">WeChat ID</label>
                                     <input
                                         type="text"
                                         name="wechat_id"
                                         id="pub-wechat"
-                                        required
                                         className="form-input"
                                         value={publishForm.wechat_id}
                                         onChange={handlePublishChange}
                                     />
                                 </div>
                                 <div className="form-field">
-                                    <label htmlFor="pub-phone" className="form-label">电话号码</label>
+                                    <label htmlFor="pub-phone" className="form-label">Phone Number</label>
                                     <input
                                         type="tel"
                                         name="phone_number"
@@ -313,11 +296,12 @@ export default function Contact() {
                                     />
                                 </div>
                                 <div className="form-field">
-                                    <label htmlFor="pub-email" className="form-label">邮箱</label>
+                                    <label htmlFor="pub-email" className="form-label">Email *</label>
                                     <input
                                         type="email"
                                         name="email_address"
                                         id="pub-email"
+                                        required
                                         className="form-input"
                                         value={publishForm.email_address}
                                         onChange={handlePublishChange}
@@ -326,13 +310,13 @@ export default function Contact() {
                             </div>
                         </div>
 
-                        <div className="form-disclaimer">
-                            <p>
-                                * 为必填项目。提交后我们会审核您的房源信息，通过后将显示在平台上。我们承诺不会泄露您的个人信息。
-                            </p>
-                        </div>
-
-                        <button type="submit" className="submit-btn">🚀 发布房源</button>
+                        <button
+                            type="submit"
+                            className="submit-btn"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Submitting...' : 'Submit Listing'}
+                        </button>
                     </form>
                 </div>
             </section>
@@ -361,72 +345,106 @@ export default function Contact() {
 
             {/* Contact Section */}
             <section className="contact-section" id="contact">
-                <h2 className="contact-title">没找到合适的房源？<br />留下您的信息，我们为您定制寻找</h2>
+                <h2 className="contact-title">📬 Contact Us</h2>
+                <p className="section-subtitle">
+                    Need help finding the perfect place? Let us know your requirements!
+                </p>
                 <div className="form-container">
                     <form onSubmit={handleContactSubmit}>
                         <div className="form-grid">
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="姓名"
-                                required
-                                className="form-input"
-                                value={contactForm.name}
-                                onChange={handleContactChange}
-                            />
-                            <input
-                                type="text"
-                                name="wechat"
-                                placeholder="微信号"
-                                required
-                                className="form-input"
-                                value={contactForm.wechat}
-                                onChange={handleContactChange}
-                            />
-                            <input
-                                type="date"
-                                name="checkin"
-                                placeholder="入住时间"
-                                required
-                                className="form-input"
-                                value={contactForm.checkin}
-                                onChange={handleContactChange}
-                            />
-                            <input
-                                type="date"
-                                name="checkout"
-                                placeholder="退房时间"
-                                required
-                                className="form-input"
-                                value={contactForm.checkout}
-                                onChange={handleContactChange}
-                            />
-                            <input
-                                type="text"
-                                name="price"
-                                placeholder="预算范围"
-                                className="form-input"
-                                value={contactForm.price}
-                                onChange={handleContactChange}
-                            />
-                            <input
-                                type="text"
-                                name="roomtype"
-                                placeholder="期望房型"
-                                className="form-input"
-                                value={contactForm.roomtype}
-                                onChange={handleContactChange}
-                            />
+                            <div className="form-field">
+                                <label htmlFor="contact-name" className="form-label">Name *</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    id="contact-name"
+                                    required
+                                    className="form-input"
+                                    value={contactForm.name}
+                                    onChange={handleContactChange}
+                                />
+                            </div>
+                            <div className="form-field">
+                                <label htmlFor="contact-wechat" className="form-label">WeChat ID *</label>
+                                <input
+                                    type="text"
+                                    name="wechat"
+                                    id="contact-wechat"
+                                    required
+                                    className="form-input"
+                                    value={contactForm.wechat}
+                                    onChange={handleContactChange}
+                                />
+                            </div>
+                            <div className="form-field">
+                                <label htmlFor="contact-checkin" className="form-label">Check-in Date *</label>
+                                <input
+                                    type="date"
+                                    name="checkin"
+                                    id="contact-checkin"
+                                    required
+                                    className="form-input"
+                                    value={contactForm.checkin}
+                                    onChange={handleContactChange}
+                                />
+                            </div>
+                            <div className="form-field">
+                                <label htmlFor="contact-checkout" className="form-label">Check-out Date *</label>
+                                <input
+                                    type="date"
+                                    name="checkout"
+                                    id="contact-checkout"
+                                    required
+                                    className="form-input"
+                                    value={contactForm.checkout}
+                                    onChange={handleContactChange}
+                                />
+                            </div>
+                            <div className="form-field">
+                                <label htmlFor="contact-price" className="form-label">Budget (USD/month)</label>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    id="contact-price"
+                                    className="form-input"
+                                    value={contactForm.price}
+                                    onChange={handleContactChange}
+                                    placeholder="e.g., 1200"
+                                />
+                            </div>
+                            <div className="form-field">
+                                <label htmlFor="contact-roomtype" className="form-label">Preferred Room Type</label>
+                                <select
+                                    name="roomtype"
+                                    id="contact-roomtype"
+                                    className="form-input"
+                                    value={contactForm.roomtype}
+                                    onChange={handleContactChange}
+                                >
+                                    <option value="">Select Room Type</option>
+                                    <option value="studio">Studio</option>
+                                    <option value="1b1b">1B1B</option>
+                                    <option value="1.5b1b">1.5B1B</option>
+                                    <option value="2b1b">2B1B</option>
+                                    <option value="2b2b">2B2B</option>
+                                    <option value="3b2b">3B2B</option>
+                                    <option value="4b2b">4B2B</option>
+                                </select>
+                            </div>
+                            <div className="form-field full-width">
+                                <label htmlFor="contact-notes" className="form-label">Additional Notes</label>
+                                <textarea
+                                    name="notes"
+                                    id="contact-notes"
+                                    className="form-input"
+                                    rows="4"
+                                    value={contactForm.notes}
+                                    onChange={handleContactChange}
+                                    placeholder="Any specific requirements or preferences..."
+                                ></textarea>
+                            </div>
                         </div>
-                        <textarea
-                            name="notes"
-                            rows="4"
-                            placeholder="其他需求和备注..."
-                            className="form-textarea"
-                            value={contactForm.notes}
-                            onChange={handleContactChange}
-                        />
-                        <button type="submit" className="submit-btn">🚀 提交需求</button>
+                        <button type="submit" className="submit-btn">Send Inquiry</button>
                     </form>
                 </div>
             </section>

@@ -1,24 +1,24 @@
 export default function Steps() {
     return (
         <section className="steps-section">
-            <h2 className="steps-title">我们的匹配流程</h2>
+            <h2 className="steps-title">How It Works</h2>
             <div className="steps-container">
                 <div className="step-card">
                     <div className="step-number">1</div>
-                    <h3 className="step-title">输入需求</h3>
-                    <p className="step-desc">填写入住时间、房型及预算</p>
+                    <h3 className="step-title">Enter Requirements</h3>
+                    <p className="step-desc">Specify dates, room type, and budget</p>
                 </div>
                 <div className="step-arrow">→</div>
                 <div className="step-card">
                     <div className="step-number">2</div>
-                    <h3 className="step-title">智能算法</h3>
-                    <p className="step-desc">AI算法分析多维度匹配因素</p>
+                    <h3 className="step-title">Smart Algorithm</h3>
+                    <p className="step-desc">AI analyzes multiple matching factors</p>
                 </div>
                 <div className="step-arrow">→</div>
                 <div className="step-card">
                     <div className="step-number">3</div>
-                    <h3 className="step-title">推荐结果</h3>
-                    <p className="step-desc">生成个性化匹配评分</p>
+                    <h3 className="step-title">Get Results</h3>
+                    <p className="step-desc">Receive personalized match scores</p>
                 </div>
             </div>
 

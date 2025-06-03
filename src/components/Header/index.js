@@ -10,12 +10,12 @@ export default function Header() {
     const [emailStatus, setEmailStatus] = useState(''); // 'sending', 'success', 'error'
     const router = useRouter();
 
-    // 初始化EmailJS (请替换为您的实际配置)
+    // Initialize EmailJS
     useEffect(() => {
-        emailjs.init("bMngx4pjmTwop4Ivs"); // 替换为您的EmailJS Public Key
+        emailjs.init("bMngx4pjmTwop4Ivs");
     }, []);
 
-    // 滚动到指定区域的函数
+    // Scroll to section function
     const scrollToSection = (sectionId) => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -23,39 +23,39 @@ export default function Header() {
         }
     };
 
-    // 发送邮件功能
+    // Send email function
     const sendEmail = async (featureName) => {
         const templateParams = {
             feature_name: featureName,
-            user_message: `用户对 ${featureName} 功能感兴趣，希望了解更多信息。`,
+            user_message: `User is interested in the ${featureName} feature and would like to learn more.`,
             to_email: 'subletmatcher@gmail.com',
-            from_name: '网站访客',
-            timestamp: new Date().toLocaleString('zh-CN')
+            from_name: 'Website Visitor',
+            timestamp: new Date().toLocaleString('en-US')
         };
 
         try {
             await emailjs.send(
-                'service_b9sc71r',    // 替换为您的EmailJS Service ID
-                'template_crgo7cu',   // 替换为您的EmailJS Template ID
+                'service_b9sc71r',
+                'template_crgo7cu',
                 templateParams
             );
             return true;
         } catch (error) {
-            console.error('邮件发送失败:', error);
+            console.error('Failed to send email:', error);
             return false;
         }
     };
 
-    // 打开弹窗并自动发送邮件
+    // Open modal and send email automatically
     const openModalAndSendEmail = async (featureName) => {
         setModalFeatureName(featureName);
         setIsModalOpen(true);
         setEmailStatus('sending');
 
-        // 防止背景滚动
+        // Prevent background scrolling
         document.body.style.overflow = 'hidden';
 
-        // 自动发送邮件
+        // Send email automatically
         const success = await sendEmail(featureName);
 
         if (success) {
@@ -65,23 +65,23 @@ export default function Header() {
         }
     };
 
-    // 关闭弹窗
+    // Close modal
     const closeModal = () => {
         setIsModalOpen(false);
         setModalFeatureName('');
         setEmailStatus('');
-        // 恢复背景滚动
+        // Restore background scrolling
         document.body.style.overflow = 'auto';
     };
 
-    // 处理导航点击事件
+    // Handle navigation click
     const handleNavClick = (id, name) => {
         if (id === 'data') {
             router.push('/data');
             return;
         }
 
-        // 检查是否是开发中的功能
+        // Check if feature is under development
         if (id === 'home-services' || id === 'storage-shipping') {
             openModalAndSendEmail(name);
             setIsMobileMenuOpen(false);
@@ -93,20 +93,20 @@ export default function Header() {
     };
 
     const navItems = [
-        { name: '转租房源', id: 'data' },
-        { name: '家居帮手', id: 'home-services' },
-        { name: '寄存/转运', id: 'storage-shipping' },
+        { name: 'Listings', id: 'data' },
+        { name: 'Home Services', id: 'home-services' },
+        { name: 'Storage/Shipping', id: 'storage-shipping' },
         { name: 'News', id: 'news' },
-        { name: '发布房源', id: 'publish-listing' },
-        { name: '联系我们', id: 'contact' },
-        { name: '打赏', id: 'donation' }
+        { name: 'Post Listing', id: 'publish-listing' },
+        { name: 'Contact', id: 'contact' },
+        { name: 'Support Us', id: 'donation' }
     ];
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
 
-    // ESC键关闭弹窗
+    // Close modal with ESC key
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape' && isModalOpen) {
@@ -123,7 +123,7 @@ export default function Header() {
         };
     }, [isModalOpen]);
 
-    // 根据邮件状态渲染不同内容
+    // Render different content based on email status
     const renderModalContent = () => {
         if (emailStatus === 'sending') {
             return (
@@ -131,12 +131,12 @@ export default function Header() {
                     <div className="modal-icon">
                         <div className="spinner"></div>
                     </div>
-                    <div className="modal-title">正在发送通知...</div>
+                    <div className="modal-title">Sending Notification...</div>
                     <div className="modal-content">
-                        我们正在自动发送您的咨询到团队邮箱，请稍候。
+                        We are automatically sending your inquiry to our team email. Please wait.
                     </div>
                     <div className="contact-info">
-                        <div className="contact-label">我们的邮箱：</div>
+                        <div className="contact-label">Our Email:</div>
                         <div className="contact-email">subletmatcher@gmail.com</div>
                     </div>
                 </>
@@ -149,13 +149,13 @@ export default function Header() {
                     <div className="modal-icon success">
                         ✓
                     </div>
-                    <div className="modal-title">通知已发送！</div>
-                    <div className="modal-subtitle">感谢您使用 SubletMatcher</div>
+                    <div className="modal-title">Notification Sent!</div>
+                    <div className="modal-subtitle">Thank you for using SubletMatcher</div>
                     <div className="modal-content">
-                        我们已收到您对 <strong>{modalFeatureName}</strong> 的咨询。该功能还在开发中，团队会尽快与您联系，敬请期待！
+                        We have received your inquiry about <strong>{modalFeatureName}</strong>. This feature is under development, and our team will contact you soon. Stay tuned!
                     </div>
                     <div className="contact-info">
-                        <div className="contact-label">我们的邮箱：</div>
+                        <div className="contact-label">Our Email:</div>
                         <div className="contact-email">subletmatcher@gmail.com</div>
                     </div>
                 </>
@@ -168,13 +168,13 @@ export default function Header() {
                     <div className="modal-icon error">
                         ⚠️
                     </div>
-                    <div className="modal-title">发送遇到问题</div>
-                    <div className="modal-subtitle">感谢您使用 SubletMatcher</div>
+                    <div className="modal-title">Sending Failed</div>
+                    <div className="modal-subtitle">Thank you for using SubletMatcher</div>
                     <div className="modal-content">
-                        <strong>{modalFeatureName}</strong> 功能还在开发中，尽情期待。自动通知发送失败，您也可以直接联系我们的邮箱：
+                        The <strong>{modalFeatureName}</strong> feature is under development. The automatic notification failed to send. You can contact us directly at:
                     </div>
                     <div className="contact-info">
-                        <div className="contact-label">详细请联系：</div>
+                        <div className="contact-label">Contact us at:</div>
                         <div className="contact-email">subletmatcher@gmail.com</div>
                     </div>
                 </>
@@ -188,17 +188,17 @@ export default function Header() {
         <>
             <header className="header">
                 <div className="header-container">
-                    {/* Logo部分 */}
+                    {/* Logo section */}
                     <div className="logo">
-                        <span className="logo-text">SubletMatcher 智能匹配找房</span>
+                        <span className="logo-text">SubletMatcher Smart Housing</span>
                     </div>
 
-                    {/* 桌面端导航 */}
+                    {/* Desktop navigation */}
                     <nav className="desktop-nav">
                         {navItems.map((item) =>
                             item.id === 'publish-listing' ? (
                                 <Link key={item.id} href="/upload">
-                                    <button className="nav-item">{item.name}</button>
+                                    <span className="nav-item highlight">{item.name}</span>
                                 </Link>
                             ) : (
                                 <button
@@ -212,54 +212,41 @@ export default function Header() {
                         )}
                     </nav>
 
-                    {/* 移动端菜单按钮 */}
-                    <div className={`mobile-nav ${isMobileMenuOpen ? 'open' : ''}`}>
-                        {navItems.map((item) =>
-                            item.id === 'publish-listing' ? (
-                                <Link key={item.id} href="/upload">
-                                    <button className="mobile-nav-item">{item.name}</button>
-                                </Link>
-                            ) : (
-                                <button
-                                    key={item.id}
-                                    className="mobile-nav-item"
-                                    onClick={() => handleNavClick(item.id, item.name)}
-                                >
-                                    {item.name}
-                                </button>
-                            )
-                        )}
-                    </div>
+                    {/* Mobile menu button */}
+                    <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
+                        <div className={`hamburger ${isMobileMenuOpen ? 'open' : ''}`}>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
                 </div>
 
-                {/* 移动端导航菜单 */}
-                <div className={`mobile-nav ${isMobileMenuOpen ? 'open' : ''}`}>
-                    {navItems.map((item) => (
-                        <button
-                            key={item.id}
-                            className="mobile-nav-item"
-                            onClick={() => handleNavClick(item.id, item.name)}
-                        >
-                            {item.name}
-                        </button>
-                    ))}
-                </div>
+                {/* Mobile navigation */}
+                <nav className={`mobile-nav ${isMobileMenuOpen ? 'open' : ''}`}>
+                    {navItems.map((item) =>
+                        item.id === 'publish-listing' ? (
+                            <Link key={item.id} href="/upload">
+                                <span className="mobile-nav-item highlight">{item.name}</span>
+                            </Link>
+                        ) : (
+                            <button
+                                key={item.id}
+                                className="mobile-nav-item"
+                                onClick={() => handleNavClick(item.id, item.name)}
+                            >
+                                {item.name}
+                            </button>
+                        )
+                    )}
+                </nav>
             </header>
 
-            {/* 弹窗组件 */}
+            {/* Feature development modal */}
             {isModalOpen && (
-                <div
-                    className="modal-overlay"
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) {
-                            closeModal();
-                        }
-                    }}
-                >
-                    <div className="modal">
-                        <button className="close-btn" onClick={closeModal}>
-                            &times;
-                        </button>
+                <div className="modal-overlay" onClick={closeModal}>
+                    <div className="modal" onClick={e => e.stopPropagation()}>
+                        <button className="modal-close" onClick={closeModal}>×</button>
                         {renderModalContent()}
                     </div>
                 </div>

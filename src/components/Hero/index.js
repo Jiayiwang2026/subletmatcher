@@ -1,4 +1,3 @@
-
 // components/Hero.js
 import { useState, useEffect } from 'react';
 import SearchContainer from './SearchContainer';
@@ -6,8 +5,8 @@ import SearchContainer from './SearchContainer';
 export default function Hero() {
     return (
         <section className="hero">
-            <h1>智能算法 · 高效找房</h1>
-            <p>输入你的需求，我们为你匹配最优短租组合</p>
+            <h1>Smart Algorithm · Efficient Housing</h1>
+            <p>Enter your requirements, we'll match you with the best sublease combinations</p>
             <SearchContainer />
 
             <style jsx>{`

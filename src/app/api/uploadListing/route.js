@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getConnection } from '../../db';
+import pool from '../../db';
 
 export async function POST(req) {
     try {
@@ -9,16 +9,13 @@ export async function POST(req) {
             price, address, feature, contact, href
         } = body;
 
-        const db = await getConnection();
-
-        await db.execute(
+        await pool.execute(
             `INSERT INTO sublets
              (title, startDate, endDate, roomType, price, address, feature, contact, href)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [title, startDate, endDate, roomType, price, address, feature, contact, href || '#']
         );
 
-        await db.end();
         return NextResponse.json({ success: true });
 
     } catch (error) {
