@@ -87,7 +87,7 @@ export default function DataHubPage() {
         <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
             {/* 图片区域 */}
             <div className="relative">
-                <Image
+                <img
                     src={message.images[0]}
                     alt={message.title}
                     className="w-full h-48 object-cover"
