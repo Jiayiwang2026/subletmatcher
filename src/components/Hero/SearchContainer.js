@@ -1,5 +1,6 @@
 // components/SearchContainer.js
 import { useState } from 'react';
+import { getSublets } from '../../api';
 
 export default function SearchContainer() {
     const [formData, setFormData] = useState({
@@ -57,29 +58,14 @@ export default function SearchContainer() {
                 return;
             }
 
-            const response = await fetch('/api/listings/search', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+            const response = await getSublets(formData);
 
-            if (!response.ok) {
-                throw new Error('Search failed, please try again later');
-            }
-
-            const data = await response.json();
-            
-            if (data.error) {
-                throw new Error(data.error);
-            }
-
-            setResults(data);
+            setResults(response);
             setShowResults(true);
         } catch (err) {
             setError(err.message);
             setResults([]);
+            console.log('error:', err.message);
         } finally {
             setIsLoading(false);
         }
@@ -209,43 +195,43 @@ export default function SearchContainer() {
                             <div className="results-grid">
                                 {results.map((item, index) => (
                                     <div key={index} className="listing-card">
-                                        <div className="match-score">{Math.round(item.score)}% Match</div>
+                                        {/* <div className="match-score">{Math.round(item.score)}% Match</div> */}
                                         <h4 className="listing-title">{item.title}</h4>
                                         <div className="listing-details">
                                             <div className="detail-row">
                                                 <span className="detail-label">📅 Available:</span>
-                                                <span>{item.转租开始时间} ~ {item.转租结束时间}</span>
+                                                <span>{item.startDate} ~ {item.endDate}</span>
                                             </div>
                                             <div className="detail-row">
                                                 <span className="detail-label">🏠 Type:</span>
-                                                <span>{item.房型.toUpperCase()}</span>
+                                                <span>{item.roomType.toUpperCase()}</span>
                                             </div>
                                             <div className="detail-row">
                                                 <span className="detail-label">📍 Location:</span>
-                                                <span>{item.地址 || 'Contact for details'}</span>
+                                                <span>{item.fullAddress || 'Contact for details'}</span>
                                             </div>
                                             <div className="detail-row">
                                                 <span className="detail-label">✨ Features:</span>
-                                                <span>{item.特色 || 'Contact for details'}</span>
+                                                <span>{item.remark || 'Contact for details'}</span>
                                             </div>
                                             <div className="detail-row">
                                                 <span className="detail-label">💰 Price:</span>
-                                                <span className="price">${item.价格}/month</span>
+                                                <span className="price">${item.price}/month</span>
                                             </div>
-                                            <div className="detail-row">
+                                            {/* <div className="detail-row">
                                                 <span className="detail-label">⏰ Time Match:</span>
                                                 <span>{item.coveragePercent}%</span>
-                                            </div>
-                                            {item.联系方式 && (
+                                            </div> */}
+                                            {item.userName && (
                                                 <div className="detail-row">
                                                     <span className="detail-label">📱 Contact:</span>
-                                                    <span>{item.联系方式}</span>
+                                                    <span>{item.userName}</span>
                                                 </div>
                                             )}
                                         </div>
                                         <button
                                             className="view-btn"
-                                            onClick={() => handleViewDetails(item.href, item.联系方式)}
+                                            onClick={() => handleViewDetails(item.nameHref, item.nameHref)}
                                         >
                                             View Details →
                                         </button>

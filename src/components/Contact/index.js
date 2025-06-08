@@ -4,29 +4,31 @@ import axios from 'axios';
 
 export default function Contact() {
     const [publishForm, setPublishForm] = useState({
-        start_date: '',
-        end_date: '',
-        room_type: '',
-        private_bathroom: '',
-        roommates_count: '',
-        monthly_rent: '',
-        walking_distance: '',
-        location: '',
-        property_description: '',
-        contact_name: '',
-        wechat_id: '',
-        phone_number: '',
-        email_address: ''
+        startDate: '',
+        endDate: '',
+        roomType: '',
+        privateBathroom: '',
+        roommatesCount: '',
+        monthlyRent: '',
+        walkingDistance: '',
+        fullAddress: '',
+        propertyDescription: '',
+        contactName: '',
+        wechatId: '',
+        phoneNumber: '',
+        email: ''
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [contactForm, setContactForm] = useState({
         name: '',
-        wechat: '',
+        wechatId: '',
+        email: '',
+        phone: '',
         checkin: '',
         checkout: '',
-        price: '',
+        buget: '',
         roomtype: '',
         notes: ''
     });
