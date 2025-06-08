@@ -6,7 +6,7 @@ export default function Hero() {
     return (
         <section className="hero">
             <h1>Smart Algorithm · Efficient Housing</h1>
-            <p>Enter your requirements, we'll match you with the best sublease combinations</p>
+            <p>Enter your requirements, we will match you with the best sublease combinations</p>
             <SearchContainer />
 
             <style jsx>{`

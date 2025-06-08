@@ -203,7 +203,7 @@ export default function HomePage() {
         <div className="group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-2">
             {/* 图片区域 */}
             <div className="relative overflow-hidden">
-                <img
+                <Image
                     src={listing.images[0]}
                     alt={listing.title}
                     className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
